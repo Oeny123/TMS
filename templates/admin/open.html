@@ -1,0 +1,526 @@
+{% extends 'base.html' %}
+
+
+<!-- Head -->
+{% block head %}
+    <title>Open Projects</title>
+{% endblock %}
+
+
+<!-- Top -->
+{% block top %}
+    <div>
+        <p id="subp">Open Projects</p>
+        {% for image in images %}
+            {% if userid|string == image.user_id|string %}
+                <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
+            {% endif %}
+        {% else %}
+            <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" onclick="pfp_modal() ">
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+<!-- Panel -->
+{% block panel %}
+    <div class="user-details">
+        <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" class="profile">
+        <br>
+        <p class="name"> {{ name }}</p>
+        <p class="departement">Admin</p>
+        <br>
+        <br>
+    </div>
+    <div class="links">
+        <a href="{{ url_for('admin') }}">
+            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="">
+            <p>Dashboard</p>
+        </a>
+        <br>
+        <a  href="{{url_for('admin_staff')}}">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt="">
+            <p>Staff</p>
+        </a>
+        <br>
+        <a onclick="project_nav()" class="active">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
+            <p>Projects </p>
+        </a>
+        <ul id="projects">
+            <li>
+                <a class="active">
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
+                    <p>Open</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_finish_project')}}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                    <p>Finished</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_trash_project')}}"> 
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                    <p>Trashed</p>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <a>
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+            <p>Notification</p>
+        </a>
+    </div>
+{% endblock %}
+
+
+<!-- nav2 -->
+{% block nav2 %}
+    <div class="icon-link">
+        <br>
+        <a>
+            <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
+        </a>
+        <br>
+        <br>
+        <a href="{{url_for('admin')}}">
+            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="">
+        </a>
+        <br>
+        <a href="{{ url_for('admin_staff'  ) }}">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt=""  >
+        </a>
+        <br>
+        <a onclick="project_nav()">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj active-icon" alt="" id="folder">
+        </a>
+        <ul id="project-icon">
+            <li>
+                <a>
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="" class="active-icon">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_finish_project')}}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_trash_project')}}">
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                </a>
+            </li>
+        </ul>
+        <a>
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+        </a>
+    </div>
+{% endblock %}
+
+
+<!-- Main -->
+{% block main %}
+    <div class=project-main>
+        <div class="project-head">
+            <h1>Project List</h1>
+            <button onclick="edit_project_modal()">Add New Project</button>
+        </div>
+        <br>
+        <br>
+        {% for project in projects %}
+            {% if project.project_status == "Open" %}
+                <details>
+                    <summary>
+                        <div class="proj-details" onclick="update_project_modal('{{project._id|string ~ 3}}')">
+                            {{ project.project_name }} | {{project.project_department}} | {{ project.progress }}%
+                        </div>
+                        <div class="modal-bg" id="{{project._id|string ~ 3}}">
+                            <div class="modal">
+                                <div class="modal-content">
+                                    <p>Project Name : {{ project.project_name }}</p>
+                                    <br>
+                                    <p>Project Description : {{ project.project_description }}</p>
+                                    <br>
+                                    <p>Project Creator : {{ project.project_creator }} </p>
+                                    <br> 
+                                    <button onclick="update_project_modal('{{project._id|string ~ 3}}')">close</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="update_project_modal('{{project._id|string}}')">Update</button>
+                            <div class="modal-bg" id="{{project._id|string}}">
+                                <div class="modal">
+                                    <div class="modal-content">
+                                        <form action="{{url_for('update_project', id = project['_id']  ) }}" method="POST">
+                                            <label for="">Project Name</label>
+                                            <br>
+                                            <input type="text" name="project_name" id="" value="{{project.project_name}}">
+                                            <br>
+                                            <br>
+                                            <label for="">Department</label>
+                                            <br>
+                                            <select name="department" id="">
+                                                <option value="{{project.project_department}}" selected>{{project.project_department}}</option>
+                                                {% for dept in depts %}
+                                                    <option value="{{dept.dept}}"> {{dept.dept}} </option>
+                                                {% endfor %}
+                                            </select>
+                                            <br>
+                                            <label for="">Status</label>
+                                            <br>
+                                            <select name="project_status" id="">
+                                                <option value="Open">Open</option>
+                                                <option value="Finish">Finish</option>
+                                            </select>
+                                            <br>
+                                            <br>
+                                            <button type="submit">Update</button>
+                                            <br>
+                                            <br>
+                                        </form>
+                                        <button onclick="update_project_modal('{{project._id|string}}')">close</button>
+                                    </div>
+                                </div>
+                            </div>
+                            | <button onclick="trash_project_modal('{{project._id|string ~ 1}}')">Trash</button>
+                            <div class="modal-bg" id="{{project._id|string ~ 1}}">
+                                <div class="modal">
+                                    <div class="modal-content">
+                                        <form action="{{url_for('trash_project', id = project['_id']  ) }}" method="POST">
+                                            <h1>{{project.project_name}}</h1>
+                                            <button type="submit">trash</button>
+                                        </form>
+                                        <button onclick="trash_project_modal('{{project._id|string ~ 1}}')">close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </summary>
+                    <div class="table-container" >
+                        <br>
+                        <div class="task-action">
+                            <button onclick="add_task_modal('{{project._id|string ~ 2 }}')">Add Task</button>
+                            <div class="modal-bg" id="{{project._id|string ~ 2 }}">
+                                <div class="modal"> 
+                                    <div class="modal-content">
+                                        <form action=" {{ url_for('add_task', id=project['_id']) }} " method="POST">
+                                            <label for="">Task Name</label>
+                                            <br>
+                                            <input type="text" name="task_name" id="">
+                                            <br>
+                                            <br>
+                                            <label for="">Description</label>
+                                            <br>
+                                            <textarea name="description" id=""></textarea>
+                                            <br>
+                                            <br>
+                                            <label for="">Assign:</label>
+                                            <br>
+                                            <select id="myMultiSelect{{ loop.index }}" name="assign[]" multiple="multiple" style="width: 300px;">
+                                                <option value="1">Option 1</option>
+                                                <option value="2">Option 2</option>
+                                                <option value="3">Option 3</option>
+                                                <option value="4">Option 4</option>
+                                                <option value="5">Option 5</option>
+                                            </select>
+                                            <br>
+                                            <script>
+                                                $(document).ready(function() {
+                                                // Initialize Select2 for the static multi-select dropdown
+                                                $('#myMultiSelect{{ loop.index }}').select2({
+                                                        placeholder: 'Select options',
+                                                        allowClear: true
+                                                    });
+                                                });
+
+                                            </script>
+                                            <br>
+                                            <label for="">Start Date</label>
+                                            <br>
+                                            <input type="date" name="start_date" id="">
+                                            <br>
+                                            <br>
+                                            <label for="">Estimated End</label>
+                                            <br>
+                                            <input type="date" name="due_date" id="">
+                                            <br>
+                                            <br>
+                                            <label for="">Status</label>
+                                            <br>
+                                            <select name="task_status" id="">
+                                                <option value="Open">Open</option>
+                                                <option value="Priority">Priority</option>
+                                                <option value="Done">Done</option>
+                                                <option value="Canceled">Canceled</option>
+                                            </select>
+                                            <br>
+                                            <br>
+                                            <button type="submit">Add</button>
+                                            <br>
+                                        </form>
+                                        <button onclick="add_task_modal('{{project._id|string ~ 2 }}')">close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
+                        <table> 
+                            <tr>
+                                <th>Task Name</th>
+                                <th>Assigned To</th>
+                                <th>Status</th>
+                                <th>Start Date</th>
+                                <th>Estimate End</th>
+                                <th>Actions</th>
+                            </tr>
+                            {% for task in tasks %}
+                                {% if project._id|string == task.project_id|string  %}
+                            <tr>
+                                <td onclick="update_project_modal('{{task._id|string ~ 1}}')" > {{ task.task_name }} </td>
+                                <td> 
+                                    {% for ass in task.assigned_to %}
+                                        {{ ass }},
+                                    {% endfor %}
+                                </td>
+                                <td> {{ task.task_status }} </td>
+                                <td> {{ task.start_date }} </td>
+                                <td> {{ task.due_date }} </td>
+                                <td> <button onclick="add_task_modal('{{task._id|string ~ 2 }}')">Edit</button> 
+                                    | <button onclick="add_task_modal('{{task._id|string ~ 3 }}')">Delete</button>    
+                                </td>
+                                <div class="modal-bg" id="{{task._id|string ~ 3 }}">
+                                    <div class="modal"> 
+                                        <div class="modal-content">
+                                            <form action=" {{ url_for('delete_task', id=task['_id']) }} " method="POST">
+                                                <button type="submit">Delete</button>
+                                            </form>
+                                            <button onclick="add_task_modal('{{task._id|string ~ 3 }}')">close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-bg" id="{{task._id|string ~ 2 }}">
+                                    <div class="modal"> 
+                                        <div class="modal-content">
+                                            <form action=" {{ url_for('edit_task', id=task['_id']) }} " method="POST">
+                                                <label for="">New Name</label>
+                                                <br>
+                                                <input type="text" name="new_task_name" id="" value="{{ task.task_name }}">
+                                                <br>
+                                                <br>
+                                                <label for="">Description</label>
+                                                <br>
+                                                <textarea name="new_description" id="">{{ task.task_description }}</textarea>
+                                                <br>
+                                                <br>
+                                                <label for="">Assign:</label>
+                                                <br>
+                                                <select id="myMultiSelect{{ loop.index ~ 1 }}" name="new_assign[]" multiple="multiple" style="width: 300px;">
+                                                    <option value="1">Option 1</option>
+                                                    <option value="2">Option 2</option>
+                                                    <option value="3">Option 3</option>
+                                                    <option value="4">Option 4</option>
+                                                    <option value="5">Option 5</option>
+                                                </select>
+                                                <br>
+                                                <script>
+                                                    $(document).ready(function() {
+                                                    // Initialize Select2 for the static multi-select dropdown
+                                                    $('#myMultiSelect{{ loop.index ~ 1}}').select2({
+                                                            placeholder: 'Select options',
+                                                            allowClear: true
+                                                        });
+                                                    });
+    
+                                                </script>
+                                                <br>
+                                                <label for="">Start Date</label>
+                                                <br>
+                                                <input type="date" name="new_start_date" id="" value="{{ task.start_date }}">
+                                                <br>
+                                                <br>
+                                                <label for="">Estimated End</label>
+                                                <br>
+                                                <input type="date" name="new_due_date" id="" value="{{ task.due_date }}">
+                                                <br>
+                                                <br>
+                                                <label for="">Status</label>
+                                                <br>
+                                                <select name="new_task_status" id="">
+                                                    <option value="Open">Open</option>
+                                                    <option value="Priority">Priority</option>
+                                                    <option value="Done">Done</option>
+                                                    <option value="Close">Close</option>
+                                                    <option value="Canceled">Canceled</option>
+                                                </select>
+                                                <br>
+                                                <br>
+                                                <button type="submit">Update</button>
+                                                <br>
+                                                <br>
+                                            </form>
+                                            <button onclick="add_task_modal('{{task._id|string ~ 2 }}')">close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-bg" id="{{task._id|string ~ 1}}">
+                                    <div class="modal">
+                                        <div class="modal-content">
+                                            <p>Task Name : {{ task.task_name }}</p>
+                                            <br>
+                                            <p>Task Description : {{ task.task_description }}</p>
+                                            <br>
+                                            <p>Task Creator : {{ task.task_creator }} </p>
+                                            <br> 
+                                            <button onclick="update_project_modal('{{task._id|string ~ 1}}')">close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tr>
+                                {% endif  %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </details>
+                <br>
+            {% endif %}
+        {% else %}
+        <div class="none">
+            <h1>No Projects</h1>
+        </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}
+
+
+<!-- Body -->
+{% block body %}
+    <div class="prof-modal" id="user-modal">
+        <div class="pfp-modal"> 
+            <div class="user-content">
+                <div class="user-modal user">
+                    {% for image in images %}
+                        {% if userid|string == image.user_id|string %}
+                            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp">
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <p class="name"> {{ name }}</p>
+                    <p class="departement">Admin</p>
+                    <br>
+                    <br>
+                </div>
+                <a onclick="settings_modal()">
+                    <img src="{{ url_for('static', filename='icons/settings.svg') }}" alt="">
+                    <p>Settings</p>
+                </a>
+                <a href=" {{ url_for('logout') }} ">
+                    <img src="{{ url_for('static', filename='icons/logout.svg') }}" alt="">
+                    <p>Logout</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="add-proj-modal">
+        <div class="modal"> 
+            <div class="modal-content">
+                <form action="{{url_for('add_project')}}" method="POST">
+                    <label for="">Project Name</label>
+                    <br>
+                    <input type="text" name="project_name" id="">
+                    <br>
+                    <br>
+                    <label for="">Description</label>
+                    <br>
+                    <textarea name="description" id=""></textarea>
+                    <br>
+                    <br>    
+                    <label for="">Department</label>
+                    <br>
+                    <select name="department" id="">
+                        {% for dept in depts %}
+                            <option value="{{dept.dept}}"> {{dept.dept}} </option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+                    <button type="submit">Add</button>
+                    <br>
+                </form>
+                <button onclick="edit_project_modal()">close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="settings">
+        <div class="modal">
+            <div class="modal-content setting-modal">
+                <div class="update-modal-container ">
+                    <div>
+                        <form action=" {{url_for('admin_setting_account', id = userid )}} " method="POST" enctype="multipart/form-data">
+                            <label for="">Profile Picture</label>
+                            <br>
+                            {% for image in images %}
+                                {% if userid|string == image.user_id|string %}
+                                    <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="edit-pfp">
+                                {% endif %}
+                            {% endfor %}
+                            <br>
+                            <br>
+                            <input type="file" name="image" id="">
+                            <br>
+                            <br>
+                            <div class="up-pfp">
+                                <button type="submit">Upload Profile</button>
+                            </div>
+                        </form>
+                        <br>
+                        <form action=" {{ url_for('admin_remove_image', id=userid) }} " method="POST">
+                            <div class="rem-pfp">
+                                <button type="submit">Remove Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        <form action=" {{ url_for('account_setting_update', id = userid) }} " method="POST" enctype="multipart/form-data">
+                            <label for="">Name<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <input type="text" name="name" id="" class="staff-input" value="">
+                            <br>
+                            <br>
+                            <div class="staff-input-flex">
+                                <div>
+                                    <label for="">Username<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="username" id="" class="staff-input" value="">
+                                </div>
+                                <div>
+                                    <label for="">Password<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="password" id="" class="staff-input" value="">
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="regi-butt">
+                                <button type="submit">Update</button>
+                                <button type="button" onclick=" settings_modal()">close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <br>
+                
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

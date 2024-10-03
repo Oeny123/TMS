@@ -1,0 +1,443 @@
+{% extends 'base.html' %}
+<!-- Head -->
+{% block head %}
+    <title>Admin</title>
+{% endblock %}
+<!-- Top -->
+{% block top %} 
+    <div>
+        <p id="subp">Admin Dashboard</p>
+        {% for image in images %}
+            {% if userid|string == image.user_id|string %}
+                <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
+            {% endif %}
+        {% else %}
+        <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" onclick="pfp_modal() ">
+        {% endfor %}
+        
+    </div>
+{% endblock %}
+<!-- Panels -->
+{% block panel %} 
+    <div class="user-details">
+        <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" class="profile">
+        <br>
+        <p class="name"> {{ name }}</p>
+        <p class="departement">Admin</p>
+        <br>
+        <br>
+    </div>
+    <div class="links">
+        <a class="active">
+            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="">
+            <p>Dashboard</p>
+        </a>
+        <br>
+        <a href="{{ url_for('admin_staff' ) }}">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt="">
+            <p>Staff</p>
+        </a>
+        <br>
+        <a onclick="project_nav()">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
+            <p>Projects </p>
+        </a>
+        <ul id="projects">
+            <li>
+                <a href="{{ url_for('admin_open_project') }}">
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
+                    <p>Open</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_finish_project')}}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                    <p>Finished</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_trash_project')}}">
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                    <p>Trashed</p>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <a>
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+            <p>Notification</p>
+        </a>
+    </div>
+{% endblock %}
+
+
+{% block nav2 %} 
+
+    <div class="icon-link" id="icon-link">
+        <br>
+        <a>
+            <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
+        </a>
+        <br>
+        <br>
+        <a>
+            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="" class="active-icon">
+        </a>
+        <br>
+        <a href="{{ url_for('admin_staff',) }}">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt="">
+        </a>
+        <br>
+        <a onclick="project_nav()">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
+        </a>
+        <ul id="project-icon">
+            <li>
+                <a href="{{ url_for('admin_open_project') }}">
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_finish_project')}}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_trash_project')}}">
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                </a>
+            </li>
+        </ul>
+        <a>
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+        </a>
+    </div>
+
+{% endblock %}
+
+
+{% block main %} 
+
+    <!-- couns open projects -->
+    {% set open_count = [] %}
+    {% for project in projects %}
+        {% if project.project_status == "Open" %}     
+            {% set _ = open_count.append(1) %}
+        {% endif %}
+    {% endfor %}
+    <!-- counts finish porject -->
+    {% set finished_count = [] %}
+    {% for project in projects %}
+        {% if project.project_status == "Finished" %}     
+            {% set _ = finished_count.append(1) %}
+        {% endif %}
+    {% endfor %}
+    <!-- counts trash porject -->
+    {% set trash_count = [] %}
+    {% for project in projects %}
+        {% if project.project_status == "Trash" %}     
+            {% set _ = trash_count.append(1) %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="dashboard-container">
+        <h1>Projects</h1>
+        <br>
+        <div class="dashboard-1">
+            <div class="cards">
+                <div>
+                    <p>Open Projects</p>
+                    <span>
+                        <img src="{{ url_for('static', filename='icons/project.png') }}" alt="" class="dashboard-icons">
+                    </span>
+                </div>
+                <p>{{ open_count | length }}</p>
+            </div>
+            <div class="cards">
+                <div>
+                    <p>Finished Projects</p>
+                    <span>
+                        <img src="{{ url_for('static', filename='icons/finished-project.png') }}" alt="" class="dashboard-icons">
+                    </span>
+                </div>
+                <p>{{ finished_count | length }}</p>
+            </div>
+            <div class="cards">
+                <div>
+                    <p>Trashed Projects</p>
+                    <span>
+                        <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="" class="dashboard-icons">
+                    </span>
+                </div>
+                <p>{{ trash_count | length }}</p>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <h1 class="db-h1">Departments
+            <button onclick="add_dept_modal()">Add New Department</button>
+        </h1>
+        <br>
+        <div class="dashboard-1">
+            <!-- Start -->
+             {% for dept in depts %}
+            <div class="cards" onclick="dept_modal('{{dept.dept}}')">
+                <!-- Counts employee -->
+                {% set staff_count = [] %}
+                {% set man_count = [] %}
+                {% for user in users %} <!-- user loop -->
+                    {% if user.department ==  dept.dept %}
+                        <!-- Staff -->
+                        {% if user.role == "Staff" %}
+                            {% set _ = staff_count.append(1) %}
+                        {% endif %}
+                        <!-- Manager -->
+                        {% if user.role == "Manager" %}
+                            {% set _ = man_count.append(1) %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                <!-- counts project -->
+                {% set open_count = [] %}
+                {% set finished_count = [] %}
+                {% set trash_count = [] %}
+                {% set priority_count = [] %}
+                {% set open_task = [] %}
+                {% set done_count = [] %}
+                {% set canceled_count = [] %}
+                {% for project in projects %} <!-- project loop -->
+                    <!-- open -->
+                    {% if project.project_status == "Open" and project.project_department == dept.dept%}     
+                        {% set _ = open_count.append(1) %}
+                        {% for task in tasks %} <!-- task loop -->
+                            {% if task.project_id|string == project._id|string and task.task_status == "Priority" %} <!-- Priority -->
+                                {% set _ = priority_count.append(1) %}
+                            {% endif %}
+                            {% if task.project_id|string == project._id|string and task.task_status == "Open" %} <!-- Open -->
+                                {% set _ = open_task.append(1) %}
+                            {% endif %}
+                            {% if task.project_id|string == project._id|string and task.task_status == "Done" %} <!-- Done -->
+                                {% set _ = done_count.append(1) %}
+                            {% endif %}
+                            {% if task.project_id|string == project._id|string and task.task_status == "Canceled" %} <!-- Canceled -->
+                                {% set _ = canceled_count.append(1) %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <!-- finished -->
+                    {% if project.project_status == "Finished" %}     
+                        {% if project.project_department == dept.dept %}
+                            {% set _ = finished_count.append(1) %}
+                        {% endif %}
+                    {% endif %}
+                    <!-- trash -->
+                    {% if project.project_status == "Trash" %}     
+                        {% if project.project_department == dept.dept %}
+                            {% set _ = trash_count.append(1) %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <div>
+                    <p>{{ dept.dept }}</p>
+                    <span>
+                        <img src="{{ url_for('static', filename='icons/department.png') }}" alt="" class="dashboard-icons">
+                    </span>
+                </div>
+                <p>{{ staff_count | length }} Staff</p>
+            </div>
+            <div class="modal-bg" id="{{ dept.dept }}" >
+                <div class="modal"> 
+                    <div class="modal-content dept-modal">
+                        
+                        <h2>{{dept.dept}}</h2>
+                        <br>
+                        <h3>Employee</h3>
+                        <br>
+                        <table>
+                            <tr>
+                                <th>Staff</th>
+                                <th>Manager</th>
+                            </tr>
+                            <tr>
+                                <td>{{ staff_count | length }}</td>
+                                <td>{{ man_count | length }}</td>
+                            </tr>
+                        </table>
+                        <br>
+                        <h3>Projects</h3>
+                        <br>
+                        <table>
+                            <tr>
+                                <th>Open</th>
+                                <th>Finished</th>
+                                <th>Trashed</th>
+                            </tr>
+                            <tr>
+                                <td> {{ open_count | length }} </td>
+                                <td> {{ finished_count | length }} </td>
+                                <td> {{ trash_count | length }} </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <h3>Task</h3>
+                        <br>
+                        <table>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Open</th>
+                                <th>Done</th>
+                                <th>Canceled</th>
+                            </tr>
+                            <tr>
+                                <td> {{ priority_count | length }} </td>
+                                <td> {{ open_task | length }} </td>
+                                <td> {{ done_count | length }} </td>
+                                <td> {{ canceled_count | length }} </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <button onclick="dept_modal('{{dept.dept}}')">Close</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <!-- End -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+<div class="prof-modal" id="user-modal">
+    <div class="pfp-modal"> 
+        <div class="user-content ">
+            <div class="user-modal user">
+                {% for image in images %}
+                    {% if userid|string == image.user_id|string %}
+                        <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp">
+                    {% endif %}
+                {% endfor %}
+                <br>
+                <p class="name"> {{ name }}</p>
+                <p class="departement">Admin</p>
+                <br>
+                <br>
+            </div>
+            <a onclick="settings_modal()">
+                <img src="{{ url_for('static', filename='icons/settings.svg') }}" alt="">
+                <p>Settings</p>
+            </a>
+            <a href=" {{ url_for('logout') }} ">
+                <img src="{{ url_for('static', filename='icons/logout.svg') }}" alt="">
+                <p>Logout</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="modal-bg" id="add_dept">
+    <div class="modal">
+        <div class="modal-content dept-modal">
+            <form action="{{ url_for('create_dept') }}" method="POST">
+                <p>Add New Department</p>
+                <input type="text" name="department" id="" class="input">
+                <br>
+                <br>    
+                <button type="submit">Add Department</button>
+            </form>
+            <br>
+            <br>
+            <p>Departments</p>
+            <div>
+                <table>
+                    <tr>
+                        <th>Department</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for dept in depts %}
+                    <tr>
+                        <td>{{ dept.dept }}</td>
+                        <td><form action="{{url_for('delete_dept', id = dept['_id'], dept = dept['dept'] )}}" method="POST">
+                            <button type="submit">Delete</button>                            
+                        </form></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br>
+            <br>
+            <button onclick=" add_dept_modal()">close</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-bg" id="settings">
+    <div class="modal">
+        <div class="modal-content setting-modal">
+            <div class="update-modal-container ">
+                <div>
+                    <form action=" {{url_for('admin_setting_account', id = userid )}} " method="POST" enctype="multipart/form-data">
+                        <label for="">Profile Picture</label>
+                        <br>
+                        {% for image in images %}
+                            {% if userid|string == image.user_id|string %}
+                                <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="edit-pfp">
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        <br>
+                        <input type="file" name="image" id="">
+                        <br>
+                        <br>
+                        <div class="up-pfp">
+                            <button type="submit">Upload Profile</button>
+                        </div>
+                    </form>
+                    <br>
+                    <form action=" {{ url_for('admin_remove_image', id=userid) }} " method="POST">
+                        <div class="rem-pfp">
+                            <button type="submit">Remove Profile</button>
+                        </div>
+                    </form>
+                </div>
+                <br>
+                <br>
+                <div>
+                    <form action=" {{ url_for('account_setting_update', id = userid) }} " method="POST" enctype="multipart/form-data">
+                        <label for="">Name<aste-ricks>*</aste-ricks></label>
+                        <br>
+                        <input type="text" name="name" id="" class="staff-input" value="">
+                        <br>
+                        <br>
+                        <div class="staff-input-flex">
+                            <div>
+                                <label for="">Username<aste-ricks>*</aste-ricks></label>
+                                <br>
+                                <input type="text" name="username" id="" class="staff-input" value="">
+                            </div>
+                            <div>
+                                <label for="">Password<aste-ricks>*</aste-ricks></label>
+                                <br>
+                                <input type="text" name="password" id="" class="staff-input" value="">
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="regi-butt">
+                            <button type="submit">Update</button>
+                            <button type="button" onclick=" settings_modal()">close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+            <br>
+            
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

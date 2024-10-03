@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+<!-- Head -->
+{% block head %}
+    <title>Manager</title>
+{% endblock %}
+<!-- Top -->
+{% block top %}
+<div>
+    <p id="subp">Staff</p>
+
+    {% for image in images %}
+        {% if userid|string == image.user_id|string %}
+            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
+        {% endif %}
+        <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" onclick="pfp_modal() ">
+    {% endfor %}
+    
+</div>
+{% endblock %}
+<!-- Panels -->
+{% block panel %}
+    <div class="user-details">
+        <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" class="profile">
+        <br>
+        <p class="name"> {{ name }}</p>
+        <p class="departement"> {{user_dept}} Manager</p>
+        <br>
+        <br>
+    </div>
+    <div class="links">
+    
+        <a class="active">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt="">
+            <p>Staff</p>
+        </a>
+        <br>
+        <a onclick="project_nav()">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
+            <p>Projects </p>
+        </a>
+        <ul id="projects">
+            <li>
+                <a href=" {{ url_for('admin_open_project') }} ">
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
+                    <p>Open</p>
+                </a>
+            </li>
+            <li>
+                <a  href="{{url_for('admin_finish_project')}}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                    <p>Finished</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_trash_project')}}">
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                    <p>Trashed</p>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <a>
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+            <p>Notification</p>
+        </a>
+    </div>
+{% endblock %}
+<!-- nav 2 -->
+{% block nav2 %}
+    <div class="icon-link">
+        <br>
+        <a>
+            <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
+        </a>
+        <br>
+        <br>
+        <br>
+        <a href="{{ url_for('admin_staff'  ) }}">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt=""  class="active-icon">
+        </a>
+        <br>
+        <a onclick="project_nav()">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
+        </a>
+        <ul id="project-icon">
+            <li>
+                <a  href="{{ url_for('admin_open_project' ) }}">
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_finish_project')}}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_trash_project')}}">
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                </a>
+            </li>
+        </ul>
+        <a>
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+        </a>
+    </div>
+{% endblock %}
+<!-- Main -->
+{% block main %}
+    <div class="user-container">
+        <!-- couns open projects -->
+        {% set open_count = [] %}
+        {% for project in projects %}
+            {% if project.project_status == "Open" and project.project_department == user_dept %}     
+                {% set _ = open_count.append(1) %}
+            {% endif %}
+        {% endfor %}
+        <!-- counts finish porject -->
+        {% set finished_count = [] %}
+        {% for project in projects %}
+            {% if project.project_status == "Finished" and project.project_department == user_dept %}     
+                {% set _ = finished_count.append(1) %}
+            {% endif %}
+        {% endfor %}
+        <!-- counts trash porject -->
+        {% set trash_count = [] %}
+        {% for project in projects %}
+            {% if project.project_status == "Trash" and project.project_department == user_dept %}     
+                {% set _ = trash_count.append(1) %}
+            {% endif %}
+        {% endfor %}
+        <h1>Projects</h1>
+        <br>
+        <div class="dashboard-1">
+            <div class="cards">
+                <div>
+                    <p>Open Projects</p>
+                    <span>
+                        <img src="{{ url_for('static', filename='icons/project.png') }}" alt="" class="dashboard-icons">
+                    </span>
+                </div>
+                <p>{{ open_count | length }}</p>
+            </div>
+            <div class="cards">
+                <div>
+                    <p>Finished Projects</p>
+                    <span>
+                        <img src="{{ url_for('static', filename='icons/finished-project.png') }}" alt="" class="dashboard-icons">
+                    </span>
+                </div>
+                <p>{{ finished_count | length }}</p>
+            </div>
+            <div class="cards">
+                <div>
+                    <p>Trashed Projects</p>
+                    <span>
+                        <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="" class="dashboard-icons">
+                    </span>
+                </div>
+                <p>{{ trash_count | length }}</p>
+            </div>
+        </div>
+        <br>
+        <br>
+        <h1>Users</h1>
+        <br>
+        <div class="Actions">
+            
+            <form method="POST" action="" class="search">
+                <input type="text" name="search" placeholder="Search..." value="{{ request.form.get('search', '') }}" class="s_input">
+                <button type="submit" class="s_button">Search</button>
+                <button type="button" onclick="add_user_modal()">Add User</button>
+            </form>
+        </div>
+
+        <br>
+        <table>
+            <tr id="trow">
+                <th>Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            {% for user in users %}
+                {% if user.department == user_dept and user.role != "Admin" %}
+                    <tr id="trow">
+                        <td onclick="dept_modal('{{user._id|string ~ 1}}')"> {{ user.name }} </td>  
+                            <div class="modal-bg" id="{{user._id|string ~ 1}}" >
+                                <div class="modal"> 
+                                    <div class="modal-content user-info">
+                                        <br>
+                                        <h2>{{ user.name }}</h2>
+                                        <br>
+                                        {% for image in images %}
+                                            {% if user._id | string == image.user_id | string %}
+                                            <img src="data:image/png;base64,{{ image.image }}" alt="Profile Picture" class="profile-staff">
+                                            {% endif %}
+                                        {% endfor %}
+                                        <br>
+                                        <p>Username: {{ user.username }}</p>
+                                        <br>
+                                        <p>Password: {{ user.password }} </p>
+                                        <br>
+                                        <p>Department: {{ user.department }}</p>
+                                        <br>
+                                        
+                                        <button onclick="dept_modal('{{user._id|string ~ 1}}')">Close</button>
+                                    </div>
+                                </div>
+                        </div>
+                        <td> {{ user.role }} </td>
+                        <td> {{ user.status }} </td>
+                        <td>
+                            <button onclick="edit_modal('{{user._id|string ~ 2}}')">Edit</button>
+                            <div class="modal-bg" id="{{user._id|string ~ 2}}">
+                                <div class="modal user-modal"> 
+                                    <div class="modal-content">
+                                        <div class="edit-modal-container">
+                                            <div>
+                                                <form action="{{ url_for('acc_image', id = user['_id']) }}" method="POST" enctype="multipart/form-data">
+                                                    <br>
+                                                    <br>
+                                                    <label for="">Profile Picture</label>
+                                                    <br>
+                                                    {% for image in images %}
+                                                        {% if user._id|string == image.user_id|string %}
+                                                            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="edit-pfp">
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <br>
+                                                    <input type="file" name="image" id="">
+                                                    <br>
+                                                    <br>
+                                                    <div class="up-pfp">
+                                                        <button type="submit">Upload Profile</button>
+                                                    </div>
+                                                </form>
+                                                <br>
+                                                <form action="{{ url_for('rem_acc', id = user['_id']) }}" method="POST">
+                                                    <div class="rem-pfp">
+                                                        <button type="submit">Remove Profile</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div>
+                                                <form action=" {{url_for('edit_account', id=user['_id'])}} " method="POST" enctype="multipart/form-data">
+                                                    <br>
+                                                    <br>
+                                                    <label for="">Name<aste-ricks>*</aste-ricks></label>
+                                                    <br>
+                                                    <input type="text" name="name" id="" class="staff-input" value="{{ user.name }}">
+                                                    <br>
+                                                    <br>
+                                                    <label for="">Departement<aste-ricks>*</aste-ricks></label>
+                                                    <br>
+                                                    <select name="department" id="" class="staff-input">
+                                                        <option value="{{user.department}}">{{user.department   }}</option>
+                                                        {% for dept in depts %}
+                                                            <option value="{{ dept.dept }}">{{dept.dept}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <br>
+                                                    <br>
+                                                    <div class="staff-input-flex">
+                                                        <div>
+                                                            <label for="">Username<aste-ricks>*</aste-ricks></label>
+                                                            <br>
+                                                            <input type="text" name="username" id="" class="staff-input" value="{{ user.username }}">
+                                                        </div>
+                                                        <div>
+                                                            <label for="">Password<aste-ricks>*</aste-ricks></label>
+                                                            <br>
+                                                            <input type="text" name="password" id="" class="staff-input" value="{{ user.password }}">
+                                                        </div>
+                                                    </div>
+                                                <br>
+                                                <br>
+                                                <div class="staff-input-flex">
+                                                        <div>
+                                                            <label for="">Role<aste-ricks>*</aste-ricks></label>
+                                                            <br>
+                                                            <select name="role" id="" class="staff-input">
+                                                                <option value="{{user.role}}">{{user.role}}</option>
+                                                                <option value="Staff">Staff</option>
+                                                                <option value="Manager">Manager</option>
+                                                                <option value="Admin">Admin</option>
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <label for="">Status<aste-ricks>*</aste-ricks></label>
+                                                            <br>
+                                                            <select name="status" id="" class="staff-input">
+                                                                <option value="{{user.status}}">{{user.status}}</option>
+                                                                <option value="Enable">Enable</option>
+                                                                <option value="Disable">Disable</option>
+                                                            </select>
+                                                        </div>
+                                                </div>    
+                                                    <br>
+                                                    <br>
+                                                    <div class="regi-butt">
+                                                        <button type="submit">Update</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="close-butt">
+                                            <button onclick="edit_modal('{{user._id|string ~ 2}}')">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            | 
+                            <button onclick="edit_modal('{{user._id|string ~ 3}}')" >Delete</button>
+                            <div class="modal-bg" id="{{user._id|string ~ 3}}">
+                                <div class="modal user-modal">  
+                                    <div class="modal-content">
+                                        <form action="{{url_for('delete_account', id=user['_id'])}}" method="POST">
+                                            <p>Delete Account</p>
+                                            <br>
+                                            <label for="" >{{user.name}}</label>    
+                                            <br>
+                                            <button type="submit">Delete</button>
+                                        </form>
+                                        <br>
+                                        <button onclick="edit_modal('{{user._id|string ~ 3}}')">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
+<!-- body -->
+{% block body %}
+
+    <div class="prof-modal" id="user-modal">
+        <div class="pfp-modal"> 
+            <div class="user-content ">
+                <div class="user-modal user">
+                    {% for image in images %}
+                        {% if userid|string == image.user_id|string %}
+                            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp">
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <p class="name"> {{ name }}</p>
+                    <p class="departement">{{ user_dept }} Manager</p>
+                    <br>
+                    <br>
+                </div>
+                <a onclick="settings_modal()">
+                    <img src="{{ url_for('static', filename='icons/settings.svg') }}" alt="">
+                    <p>Settings</p>
+                </a>
+                <a href=" {{ url_for('logout') }} ">
+                    <img src="{{ url_for('static', filename='icons/logout.svg') }}" alt="">
+                    <p>Logout</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="settings">
+        <div class="modal">
+            <div class="modal-content setting-modal">
+                <div class="update-modal-container ">
+                    <div>
+                        <form action=" {{url_for('admin_setting_account', id = userid )}} " method="POST" enctype="multipart/form-data">
+                            <label for="">Profile Picture</label>
+                            <br>
+                            {% for image in images %}
+                                {% if userid|string == image.user_id|string %}
+                                    <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="edit-pfp">
+                                {% endif %}
+                            {% endfor %}
+                            <br>
+                            <br>
+                            <input type="file" name="image" id="">
+                            <br>
+                            <br>
+                            <div class="up-pfp">
+                                <button type="submit">Upload Profile</button>
+                            </div>
+                        </form>
+                        <br>
+                        <form action=" {{ url_for('admin_remove_image', id=userid) }} " method="POST">
+                            <div class="rem-pfp">
+                                <button type="submit">Remove Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        <form action=" {{ url_for('account_setting_update', id = userid) }} " method="POST" enctype="multipart/form-data">
+                            <label for="">Name<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <input type="text" name="name" id="" class="staff-input" value="">
+                            <br>
+                            <br>
+                            <div class="staff-input-flex">
+                                <div>
+                                    <label for="">Username<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="username" id="" class="staff-input" value="">
+                                </div>
+                                <div>
+                                    <label for="">Password<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="password" id="" class="staff-input" value="">
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="regi-butt">
+                                <button type="submit">Update</button>
+                                <button type="button" onclick=" settings_modal()">close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <br>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="add-user">
+        <div class="modal"> 
+            <div class="modal-content user-modal ">
+                <form action="{{ url_for('admin_add_user') }}" method="POST">
+                    <h1>Register new user</h1>
+                    <br>
+                    <label for="">Name<aste-ricks>*</aste-ricks></label>
+                    <br>
+                    <input type="text" name="name" id="" class="staff-input">
+                    <br>
+                    <br>
+                    <label for="">Departement<aste-ricks>*</aste-ricks></label>
+                    <br>
+                    <select name="department" id="" class="staff-input">
+                        <option value=""></option>
+                        {% for dept in depts %}
+                            <option value="{{ dept.dept }}">{{dept.dept}}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+                    <div class="staff-input-flex">
+                        <div>
+                            <label for="">Username<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <input type="text" name="username" id="" class="staff-input">
+                        </div>
+                        <div>
+                            <label for="">Password<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <input type="text" name="password" id="" class="staff-input">
+                        </div>
+                    </div>
+                   <br>
+                   <br>
+                   <div class="staff-input-flex">
+                        <div>
+                            <label for="">Role<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <select name="role" id="" class="staff-input">
+                                <option value="Staff">Staff</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="">Status<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <select name="status" id="" class="staff-input">
+                                <option value="Enable">Enable</option>
+                                <option value="Disable">Disable</option>
+                            </select>
+                        </div>
+                   </div>    
+                    <br>
+                    <br>
+                    <div class="regi-butt">
+                        <button type="submit">Register</button>
+                    </div>
+                </form>
+                <br>
+                <div class="close-butt">
+                    <button onclick="add_user_modal()">Close</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

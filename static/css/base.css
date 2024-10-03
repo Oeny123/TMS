@@ -1,0 +1,372 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+aste-ricks {
+    display: block;
+    color: red;
+}
+button {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.65);
+    transition: 100ms ease;
+    margin: 0 10px 0 10px;
+}
+button:hover {
+    box-shadow: 5px 5px 3px black;
+    transform: scale(1.04);
+}
+label {
+    display: flex;
+}
+body {
+    background-color: rgb(219, 218, 218);
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url(/static/backgrounds/background.jpeg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    height: 100vh;
+}
+.top {
+    display: flex;
+
+    align-items: center ;
+    height: 10vh;
+    min-height: 2.3rem;
+    color: white;
+}
+.top div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+.top div p {
+    font-size: 2rem;
+    margin-left: 5vw;
+    opacity: 1;
+    transition: 200ms ease;
+}
+.pfp {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+.top div img {
+    height: 110%;
+}
+.prof-modal {
+    position: absolute;
+    top: 11vh;
+    right: 1vw;
+    display: none;
+}
+.pfp-modal {
+    width: 200px;
+    background-color: #797f84ea;
+    border-radius: 10px;
+}
+.user-content {
+    padding: 20px;
+    color: black;
+}
+.user-modal {
+    text-align: center;
+}
+.user-modal img  {
+    width: 80%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.user-content a {
+    display: flex;
+    padding: 5px;
+    align-items: center;
+    text-decoration: none;
+   
+}
+.opacity-1 {
+    opacity: 0 !important;
+    transition: 200ms ease;
+
+}
+.nav-button {
+    width: 3%;
+    min-width: 40px;
+}
+.nav-button-big {
+    width: 3%;
+    min-width: 40px;
+    display: none;
+}
+nav {
+    background-color: whitesmoke;
+    border: 1px solid black;
+    height: 100vh;
+    width: 17vw;
+    position: absolute;
+    top: 0;
+    left: -40vw;
+    transition: 200ms ease;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: auto;
+}
+nav a {
+    text-decoration: none;
+    color: white;
+}
+.nav-open {
+    background-color: rgba(245, 245, 245, 0.2);
+    border: 1px solid black;
+    height: 100vh;
+    width: 17vw;
+    position: absolute;
+    top: 0;
+    transition: 200ms ease;
+    left: 0vw;
+}
+.nav2 {
+    background-color: rgba(245, 245, 245, 0.1);
+    position: absolute;
+    width: 4vw;
+    height: 100vh;
+    bottom: 0;
+    left: 0;
+    min-width: 40px;
+}
+.icon-link a {
+    display: inline-block;
+    height: 40px !important;
+    width: 100%;
+    border: none;
+
+}
+.icon-link a img {
+    width: 80%;
+    margin-left: 10%;
+    max-height: 63px !important;
+}
+.icon-link ul {
+    display: none;
+}
+.icon-link ul li a img {
+    width: 50%;
+    margin-left: 25%;
+}
+.active-icon {
+    background-color: #bb8e3c;
+    border-radius: 10px;
+}
+.user-details {
+    display: none;
+}
+.links {
+    margin-top: calc(11vh - 40px) ;
+}
+.user-panel {
+    width: 90%;
+    text-align: right;
+    margin-left: 5%;
+}
+.user-panel .profile{
+    width: 50%;
+}
+.user-panel p {
+    margin-bottom: 5px;
+}
+.name {
+    font-size: 1.7rem;
+}
+.department {
+    font-size: 1.5rem;
+}
+.user-panel div {
+    width: 100%;
+}
+.active {
+    border-left: 5px solid #ffc251;
+}
+.user-panel div a {
+    display: flex;
+    width: 80%;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 100ms ;
+}
+.user-panel div a:hover {
+    border-left: 5px solid #ffc251;
+}
+.user-panel div a img {
+    margin-left: 5px;
+    width: 20%;
+}
+.user-panel div a p {
+    margin-left: 7px;
+    font-size: 1.3rem;
+}
+.user-panel ul {
+    text-align: left ; 
+    list-style: none;
+    margin-left: 50px;
+    display: none;
+}
+.user-panel ul li {
+    width: 100%;
+}
+.user-panel ul li a  {
+    display: flex;
+    width: 100%;
+}
+.user-panel ul li a img {
+    width: 15%;
+}
+
+.show {
+    display: block !important;
+}
+.user-control {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 20px;
+    display: none;
+}
+.user-control a {
+    display: flex;
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: black;
+    width: 80%;
+    transition: 100ms ;
+}
+.user-control a:hover {
+    border-left: 5px solid black;
+}
+.user-control a img {
+    width: 25%;
+}
+main {
+    height: 85vh;
+    width: 93vw;
+    margin-left: 5vw;
+    transition: 200ms ease;
+}
+.main-full {
+    width: 80vw;
+    margin-left: 18.5vw;
+    transition: 200ms ease;
+}
+
+.flashes li {
+    background-color: orange;
+    font-size: 2rem;
+    position: absolute;
+    top: -40%;
+    right: 10px;
+    list-style: none;
+    padding: 10px;
+    box-shadow: 5px 5px 10px black;
+    animation: flash 5s ;
+}
+
+@keyframes flash {
+    0% {
+        top: -10%;
+        right: 10px;
+        
+    }
+    30% {
+        top: 10px;
+        right: 10px;
+    }
+    50% {
+        top: 10px;
+        right: 10px;
+    }
+    80% {
+        top: 10px;
+        right: 10px;
+    }
+    100% {
+        top: -10%;
+        right: 10px;
+    }
+}
+
+@media (max-width: 1100px) {
+    nav {
+        width: 25vw;
+        transition: 200ms ease;
+    }
+    main {
+        width: 90vw;
+        margin-left: 5.5vw;
+        transition: 200ms ease;
+    }
+}
+
+@media (max-width: 800px) {
+    nav {
+        width: 30vw;
+        transition: 200ms ease;
+    }
+    main {
+        width: 90vw;
+        margin-left: 5.5vw;
+        transition: 200ms ease;
+    }
+}
+@media (max-width: 600px) {
+    nav {
+        width: 100vw ;
+        transition: 200ms ease;
+        left: -100vw;
+    }
+    .nav-button-big {
+        display: block;
+    }
+    .nav-open {
+        width: 100vw;
+        background-color: rgba(128, 128, 128, 0.95);
+    }
+    .user-panel {
+        text-align: center;
+    }
+    .user-details {
+        display: block;
+    }
+    .user-control {
+        display: block;
+        margin: auto;
+    }
+    main {
+        width: 100vw;
+        transition: 200ms ease;
+        margin-left: 0;
+    }
+    .nav2 {
+        display: none;
+    }
+    .top div {
+        padding: 2px;
+    }
+    .top div p {
+        font-size: 5vw;
+    }
+    .top div img {
+        display: none;
+    }
+}
