@@ -250,10 +250,8 @@
                                                     <label for="">Departement<aste-ricks>*</aste-ricks></label>
                                                     <br>
                                                     <select name="department" id="" class="staff-input">
-                                                        <option value="{{user.department}}">{{user.department   }}</option>
-                                                        {% for dept in depts %}
-                                                            <option value="{{ dept.dept }}">{{dept.dept}}</option>
-                                                        {% endfor %}
+                                                        <option value="{{user_dept}}">{{user_dept}}</option>
+                                                    
                                                     </select>
                                                     <br>
                                                     <br>
@@ -440,10 +438,7 @@
                     <label for="">Departement<aste-ricks>*</aste-ricks></label>
                     <br>
                     <select name="department" id="" class="staff-input">
-                        <option value=""></option>
-                        {% for dept in depts %}
-                            <option value="{{ dept.dept }}">{{dept.dept}}</option>
-                        {% endfor %}
+                        <option value="{{user_dept}}">{{user_dept}}</option>
                     </select>
                     <br>
                     <br>
