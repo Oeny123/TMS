@@ -118,7 +118,7 @@ def man_open_proj_funtion():
 
             non_open_tasks = sum(1 for task in tasks_count if task['task_status'] != 'Open')
             
-            progress = (non_open_tasks / total_tasks * 100) if total_tasks > 0 else 0
+            progress = (non_open_tasks / total_tasks * 100) if total_tasks > 0 else 0   
 
             projects.update_one(
                 {'_id': project['_id']},

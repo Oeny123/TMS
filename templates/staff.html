@@ -43,18 +43,6 @@
                     <p>Open</p>
                 </a>
             </li>
-            <li>
-                <a  href="{{url_for('man_finish_proj')}}">
-                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
-                    <p>Finished</p>
-                </a>
-            </li>
-            <li>
-                <a href="{{url_for('man_trash_proj')}}">
-                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
-                    <p>Trashed</p>
-                </a>
-            </li>
         </ul>
     </div>
 {% endblock %}
@@ -81,11 +69,6 @@
             <li>
                 <a  href="{{ url_for('staff_open_proj' ) }}">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
-                </a>
-            </li>
-            <li>
-                <a href="{{url_for('man_finish_proj')}}">
-                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
                 </a>
             </li>
         </ul>

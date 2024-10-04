@@ -44,12 +44,6 @@
                     <p>Open</p>
                 </a>
             </li>
-            <li>
-                <a  href="{{url_for('man_finish_proj')}}">
-                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
-                    <p>Finished</p>
-                </a>
-            </li>
         </ul>
         <br>
         
@@ -77,11 +71,6 @@
             <li>
                 <a >
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="" class="active-icon">
-                </a>
-            </li>
-            <li>
-                <a href="{{url_for('man_finish_proj')}}">
-                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
                 </a>
             </li>
         </ul>
@@ -115,53 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <button onclick="update_project_modal('{{project._id|string}}')">Update</button>
-                            <div class="modal-bg" id="{{project._id|string}}">
-                                <div class="modal">
-                                    <div class="modal-content">
-                                        <form action="{{url_for('update_project', id = project['_id']  ) }}" method="POST">
-                                            <label for="">Project Name</label>
-                                            <br>
-                                            <input type="text" name="project_name" id="" value="{{project.project_name}}">
-                                            <br>
-                                            <br>
-                                            <label for="">Department</label>
-                                            <br>
-                                            <select name="department" id="">
-                                                <option value="{{project.project_department}}" selected>{{project.project_department}}</option>
-        
-                                            </select>
-                                            <br>
-                                            <label for="">Status</label>
-                                            <br>
-                                            <select name="project_status" id="">
-                                                <option value="Open">Open</option>
-                                                <option value="Finish">Finish</option>
-                                            </select>
-                                            <br>
-                                            <br>
-                                            <button type="submit">Update</button>
-                                            <br>
-                                            <br>
-                                        </form>
-                                        <button onclick="update_project_modal('{{project._id|string}}')">close</button>
-                                    </div>
-                                </div>
-                            </div>
-                            | <button onclick="trash_project_modal('{{project._id|string ~ 1}}')">Trash</button>
-                            <div class="modal-bg" id="{{project._id|string ~ 1}}">
-                                <div class="modal">
-                                    <div class="modal-content">
-                                        <form action="{{url_for('trash_project', id = project['_id']  ) }}" method="POST">
-                                            <h1 class="w-h1">{{project.project_name}}</h1>
-                                            <button type="submit">trash</button>
-                                        </form>
-                                        <button onclick="trash_project_modal('{{project._id|string ~ 1}}')">close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </summary>
                     <div class="table-container" >
                         <br>
@@ -184,11 +127,7 @@
                                             <label for="">Assign:</label>
                                             <br>
                                             <select id="myMultiSelect{{ loop.index }}" name="assign[]" multiple="multiple" style="width: 300px;">
-                                                {% for user in users if user.department == project.project_department and user.role != 'Admin' and user.role != 'Manager' %}
-                                                    <option value="{{user.name}}" class="option">{{user.name}}</option>
-                                                {% else %}
-                                                    <option value="" class="option" disabled>No user Found...</option>
-                                                {% endfor %}
+                                                <option value="{{name}}" class="option" selected>{{name}}</option>
                                             </select>
                                             <br>
                                             <script>
