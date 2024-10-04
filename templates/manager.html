@@ -6,12 +6,11 @@
 <!-- Top -->
 {% block top %}
 <div>
-    <p id="subp">Staff</p>
+    <p id="subp">Manager</p>
 
-    {% for image in images %}
-        {% if userid|string == image.user_id|string %}
-            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
-        {% endif %}
+    {% for image in images if userid|string == image.user_id|string %}
+        <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal()">
+    {% else %}
         <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" onclick="pfp_modal() ">
     {% endfor %}
     
@@ -40,19 +39,19 @@
         </a>
         <ul id="projects">
             <li>
-                <a href=" {{ url_for('admin_open_project') }} ">
+                <a href=" {{ url_for('man_open_proj') }} ">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
                     <p>Open</p>
                 </a>
             </li>
             <li>
-                <a  href="{{url_for('admin_finish_project')}}">
+                <a  href="{{url_for('man_finish_proj')}}">
                     <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
                     <p>Finished</p>
                 </a>
             </li>
             <li>
-                <a href="{{url_for('admin_trash_project')}}">
+                <a href="{{url_for('man_trash_proj')}}">
                     <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
                     <p>Trashed</p>
                 </a>
@@ -73,9 +72,7 @@
             <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
         </a>
         <br>
-        <br>
-        <br>
-        <a href="{{ url_for('admin_staff'  ) }}">
+        <a href="{{ url_for('manager'  ) }}">
             <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt=""  class="active-icon">
         </a>
         <br>
@@ -84,17 +81,17 @@
         </a>
         <ul id="project-icon">
             <li>
-                <a  href="{{ url_for('admin_open_project' ) }}">
+                <a  href="{{ url_for('man_open_proj' ) }}">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
                 </a>
             </li>
             <li>
-                <a href="{{url_for('admin_finish_project')}}">
+                <a href="{{url_for('man_finish_proj')}}">
                     <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
                 </a>
             </li>
             <li>
-                <a href="{{url_for('admin_trash_project')}}">
+                <a href="{{url_for('man_trash_proj')}}">
                     <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
                 </a>
             </li>
@@ -117,7 +114,7 @@
         <!-- counts finish porject -->
         {% set finished_count = [] %}
         {% for project in projects %}
-            {% if project.project_status == "Finished" and project.project_department == user_dept %}     
+            {% if project.project_status == "Finish" and project.project_department == user_dept %}     
                 {% set _ = finished_count.append(1) %}
             {% endif %}
         {% endfor %}
@@ -128,7 +125,7 @@
                 {% set _ = trash_count.append(1) %}
             {% endif %}
         {% endfor %}
-        <h1>Projects</h1>
+        <h1 class="w-h1">Projects</h1>
         <br>
         <div class="dashboard-1">
             <div class="cards">
@@ -161,7 +158,7 @@
         </div>
         <br>
         <br>
-        <h1>Users</h1>
+        <h1 class="w-h1">Users</h1>
         <br>
         <div class="Actions">
             
@@ -216,7 +213,7 @@
                                     <div class="modal-content">
                                         <div class="edit-modal-container">
                                             <div>
-                                                <form action="{{ url_for('acc_image', id = user['_id']) }}" method="POST" enctype="multipart/form-data">
+                                                <form action="{{ url_for('man_account_image', id = user['_id']) }}" method="POST" enctype="multipart/form-data">
                                                     <br>
                                                     <br>
                                                     <label for="">Profile Picture</label>
@@ -235,14 +232,14 @@
                                                     </div>
                                                 </form>
                                                 <br>
-                                                <form action="{{ url_for('rem_acc', id = user['_id']) }}" method="POST">
+                                                <form action="{{ url_for('man_remove_image', id = user['_id']) }}" method="POST">
                                                     <div class="rem-pfp">
                                                         <button type="submit">Remove Profile</button>
                                                     </div>
                                                 </form>
                                             </div>
                                             <div>
-                                                <form action=" {{url_for('edit_account', id=user['_id'])}} " method="POST" enctype="multipart/form-data">
+                                                <form action=" {{url_for('manager_edit_account', id=user['_id'])}} " method="POST" enctype="multipart/form-data">
                                                     <br>
                                                     <br>
                                                     <label for="">Name<aste-ricks>*</aste-ricks></label>
@@ -315,7 +312,7 @@
                             <div class="modal-bg" id="{{user._id|string ~ 3}}">
                                 <div class="modal user-modal">  
                                     <div class="modal-content">
-                                        <form action="{{url_for('delete_account', id=user['_id'])}}" method="POST">
+                                        <form action="{{url_for('manager_delete_account', id=user['_id'])}}" method="POST">
                                             <p>Delete Account</p>
                                             <br>
                                             <label for="" >{{user.name}}</label>    
@@ -369,7 +366,7 @@
             <div class="modal-content setting-modal">
                 <div class="update-modal-container ">
                     <div>
-                        <form action=" {{url_for('admin_setting_account', id = userid )}} " method="POST" enctype="multipart/form-data">
+                        <form action="{{ url_for('man_account_image', id = userid) }}" method="POST" enctype="multipart/form-data">
                             <label for="">Profile Picture</label>
                             <br>
                             {% for image in images %}
@@ -387,7 +384,7 @@
                             </div>
                         </form>
                         <br>
-                        <form action=" {{ url_for('admin_remove_image', id=userid) }} " method="POST">
+                        <form action="{{ url_for('man_remove_image', id = userid) }}" method="POST">
                             <div class="rem-pfp">
                                 <button type="submit">Remove Profile</button>
                             </div>
@@ -399,7 +396,7 @@
                         <form action=" {{ url_for('account_setting_update', id = userid) }} " method="POST" enctype="multipart/form-data">
                             <label for="">Name<aste-ricks>*</aste-ricks></label>
                             <br>
-                            <input type="text" name="name" id="" class="staff-input" value="">
+                            <input type="text" name="name" id="" class="staff-input" value="{{name}}">
                             <br>
                             <br>
                             <div class="staff-input-flex">
@@ -425,7 +422,6 @@
                 </div>
                 <br>
                 <br>
-                
             </div>
         </div>
     </div>

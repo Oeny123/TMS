@@ -4,7 +4,9 @@ from controllers.acount_crud import edit_account_function, delete_user_account, 
 from controllers.admin import admin_staff_function, admin_open_projects_funtion, admin_finish_projects_function, admin_trash_projects_function, admin_add_user_function
 from controllers.project_controller import add_project_function, update_project_function, trash_project_function, add_task_function, edit_task_function, delete_task_function, recover_open_function, recover_finish_function, delete_project_funcion
 from controllers.dept_crud import create_dept_function, delete_dept_function
+from controllers.manger import man_edit_account_function, man_delete_user_account, man_account_image_function, man_remove_image_function, man_open_proj_funtion, man_finish_proj_funtion, man_trash_proj_funtion
 import secrets
+from controllers.staff import staff_open_project_function
     
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -21,7 +23,7 @@ def login():
 def admin():
     return admin_function()
 
-@app.route('/manager')
+@app.route('/manager', methods=['GET','POST'])
 def manager():
     return manager_function()
 
@@ -55,7 +57,41 @@ def admin_finish_project():
 def admin_trash_project():
     return admin_trash_projects_function()
 
+# Manager Pages / Routes ============================================================================
 
+@app.route('/man-edi-account<id>', methods=['GET','POST'])
+def manager_edit_account(id):
+    return man_edit_account_function(id)
+
+@app.route('/man-delete-account/<id>', methods=['GET','POST'])
+def manager_delete_account(id):
+    return man_delete_user_account(id)
+
+@app.route('/man_account_image/<id>', methods=['GET','POST'])
+def man_account_image(id):
+    return man_account_image_function(id)
+
+@app.route('/man_remove_image/<id>', methods=['GET','POST'])
+def man_remove_image(id):
+    return man_remove_image_function(id)
+
+@app.route('/man-open-proj')
+def man_open_proj():
+    return man_open_proj_funtion()
+
+@app.route('/man-finish-proj')
+def man_finish_proj():
+    return man_finish_proj_funtion()
+
+@app.route('/man-trasg-proj')
+def man_trash_proj():
+    return man_trash_proj_funtion()
+    
+# Staff Pages / Routes ============================================================================
+
+@app.route('/staff-open-proj')
+def staff_open_proj():
+    return staff_open_project_function()
 # Account Crud ============================================================================
 @app.route('/edit-account/<id>', methods=['GET', 'POST'])
 def edit_account(id):
@@ -123,7 +159,7 @@ def edit_task(id):
 def delete_task(id):
     return delete_task_function(id)
 
-# Departmetn ========================================================
+# Department ========================================================
 
 @app.route('/create-department', methods=['GET','POST'])
 def create_dept():

@@ -17,7 +17,10 @@
 }
 .db-h1 {
     display: flex;
-    
+    color: white;
+}
+.w-h1 {
+    color: white;
 }
 .cards {
     width: 30%;

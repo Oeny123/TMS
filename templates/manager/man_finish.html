@@ -33,11 +33,6 @@
         <br>
     </div>
     <div class="links">
-        <a href="{{ url_for('admin') }}">
-            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="">
-            <p>Dashboard</p>
-        </a>
-        <br>
         <a  href="{{url_for('admin_staff')}}">
             <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt="">
             <p>Staff</p>
@@ -49,7 +44,7 @@
         </a>
         <ul id="projects">
             <li>
-                <a href="{{url_for('admin_open_project')}}">
+                <a href="{{url_for('man_open_proj')}}">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
                     <p>Open</p>
                 </a>
@@ -61,7 +56,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{url_for('admin_trash_project')}}">
+                <a href="{{url_for('man_trash_proj')}}">
                     <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
                     <p>Trashed</p>
                 </a>
@@ -85,11 +80,9 @@
         </a>
         <br>
         <br>
-        <a href="{{url_for('admin')}}">
-            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="">
-        </a>
         <br>
-        <a href="{{ url_for('admin_staff'  ) }}">
+        <br>
+        <a href="{{ url_for('manager'  ) }}">
             <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt=""  >
         </a>
         <br>
@@ -98,7 +91,7 @@
         </a>
         <ul id="project-icon">
             <li>
-                <a href="{{url_for('admin_open_project')}}">
+                <a href="{{url_for('man_open_proj')}}">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
                 </a>
             </li>
@@ -108,7 +101,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{url_for('admin_trash_project')}}">
+                <a href="{{url_for('man_trash_proj')}}">
                     <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
                 </a>
             </li>
@@ -122,16 +115,15 @@
 
 <!-- Main -->
 {% block main %}
-
     <div class=project-main>
         <div class="project-head">
-            <h1>Project List</h1>
+            <h1 class="w-h1">Project List</h1>
             
         </div>
         <br>
         <br>
-        {% for project in projects if project.project_status == "Finish" %}
-            
+        {% for project in projects if project.project_status == "Finish" and project.project_department == user_dept %}
+          
                 <details>
                     <summary>
                         <div class="proj-details" onclick="update_project_modal('{{project._id|string ~ 3}}')">
@@ -166,9 +158,6 @@
                                             <br>
                                             <select name="department" id="">
                                                 <option value="{{project.project_department}}" selected>{{project.project_department}}</option>
-                                                {% for dept in depts %}
-                                                    <option value="{{dept.dept}}"> {{dept.dept}} </option>
-                                                {% endfor %}
                                             </select>
                                             <br>
                                             <label for="">Status</label>

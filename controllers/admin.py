@@ -86,8 +86,25 @@ def admin_open_projects_funtion():
         c_tasks = list(tasks.find())
         c_depts = list(depts.find())
         r_images = list(images.find())
+        r_users = list(users.find())
 
-        return render_template('admin/open.html', projects = c_projs, tasks = c_tasks, depts = c_depts, images = r_images, name = session['name'], userid = session['user-id'])
+        for project in projects.find():
+        
+            tasks_count = list(tasks.find({"project_id" : project['_id'] }))
+            total_tasks = len(tasks_count)
+
+            non_open_tasks = sum(1 for task in tasks_count if task['task_status'] != 'Open')
+            
+            progress = (non_open_tasks / total_tasks * 100) if total_tasks > 0 else 0
+
+
+            projects.update_one(
+                {'_id': project['_id']},
+                {'$set': {'progress': round(progress, 2)}}
+            )
+
+
+        return render_template('admin/open.html',users = r_users, projects = c_projs, tasks = c_tasks, depts = c_depts, images = r_images, name = session['name'], userid = session['user-id'])
     else :
         flash('Unauthorized Access')
         session.clear

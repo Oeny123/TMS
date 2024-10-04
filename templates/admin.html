@@ -73,7 +73,7 @@
 
 {% block nav2 %} 
 
-    <div class="icon-link" id="icon-link">
+    <div class="icon-link" id="icon-link">  
         <br>
         <a>
             <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
@@ -128,7 +128,7 @@
     <!-- counts finish porject -->
     {% set finished_count = [] %}
     {% for project in projects %}
-        {% if project.project_status == "Finished" %}     
+        {% if project.project_status == "Finish" %}     
             {% set _ = finished_count.append(1) %}
         {% endif %}
     {% endfor %}
@@ -141,7 +141,7 @@
     {% endfor %}
 
     <div class="dashboard-container">
-        <h1>Projects</h1>
+        <h1 class="w-h1">Projects</h1>
         <br>
         <div class="dashboard-1">
             <div class="cards">
@@ -175,7 +175,7 @@
         <br>
         <hr>
         <br>
-        <h1 class="db-h1">Departments
+        <h1 class="db-h1" >Departments
             <button onclick="add_dept_modal()">Add New Department</button>
         </h1>
         <br>

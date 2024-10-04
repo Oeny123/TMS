@@ -9,6 +9,9 @@
     display: flex;
     justify-content: space-between;
 }
+.proj-details {
+    color: white;
+}
 details {
     border: 1px solid black;    
 }
@@ -38,4 +41,8 @@ details summary {
     display: flex;
     justify-content: center;
     align-items: center ;
+}
+.option {
+    color: black !important;
+    background-color: black;
 }

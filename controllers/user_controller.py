@@ -72,10 +72,26 @@ def admin_function():
 def manager_function():
 
     r_user = list(users.find())
-    r_image = list(images.find())
-    c_dept = list(depts.find())
     c_projects = list(projects.find())
     c_tasks = list(tasks.find())
+    c_dept = list(depts.find())
+    r_image  = list(images.find())
+    
+    search_query = request.form.get('search', '')
+    if search_query:
+        r_user = users.find({
+        "$or": [
+        {"name": {"$regex": search_query, "$options": "i"}},
+        {"username": {"$regex": search_query, "$options": "i"}},
+        {"password": {"$regex": search_query, "$options": "i"}},
+        {"status": {"$regex": search_query, "$options": "i"}},
+        {"role": {"$regex": search_query, "$options": "i"}},
+        {"department": {"$regex": search_query, "$options": "i"}},
+        {"date_created": {"$regex": search_query, "$options": "i"}}]})
+    else:
+        r_user = users.find()
+        c_dept = list(depts.find())
+
 
     if 'username' in session and session['role'] == "Manager" and session['status'] == "Enable":
         return render_template('manager.html', depts = c_dept, users = r_user, projects = c_projects, tasks = c_tasks, images = r_image, name = session['name'] , userid = session['user-id'], user_dept = session['user-department'])
@@ -85,9 +101,11 @@ def manager_function():
         return redirect(url_for('login'))
     
 def staff_function():
-    
+
     if 'username' in session and session['role'] == "Staff" and session['status'] == "Enable":
-        return render_template('staff.html')
+        r_image  = list(images.find())
+
+        return render_template('staff.html',images = r_image ,name = session['name'] , userid = session['user-id'], user_dept = session['user-department'])
     else:
         session.clear()
         flash("Unauthorized Access")

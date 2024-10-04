@@ -128,9 +128,7 @@
         </div>
         <br>
         <br>
-        {% for project in projects %}
-
-            {% if project.project_status == "Trash" %}
+        {% for project in projects if project.project_status == "Trash"%}
                 <details>
                     <summary>
                         <div class="proj-details" onclick="update_project_modal('{{project._id|string ~ 3}}')">
@@ -226,7 +224,10 @@
                     </div>
                 </details>
                 <br>
-            {% endif %}
+        {% else %}
+        <div class="none">
+            <h1 class="w-h1">No Projects</h1>
+        </div>
         {% endfor %}
 
 

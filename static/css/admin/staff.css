@@ -34,6 +34,7 @@ table tr td {
     background-color: rgb(142, 176, 180);
     color: black;
     transition: 100ms ease;
+    text-overflow: ellipsis;
 }
 table tr td:first-child {
     border-radius: 7px 0 0 7px;

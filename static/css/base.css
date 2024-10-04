@@ -29,7 +29,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    color: white;
+ 
     height: 100vh;
 }
 .top {
@@ -280,6 +280,10 @@ main {
     padding: 10px;
     box-shadow: 5px 5px 10px black;
     animation: flash 5s ;
+}
+.staff-task-action {
+    display: flex;
+    align-items: center;
 }
 
 @keyframes flash {

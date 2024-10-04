@@ -36,7 +36,11 @@ def edit_account_function(id):
                         "date_updated" : d_up
                 }})
             flash("Account Updated")
-            return redirect(url_for('admin_staff'))
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
+
     else:
         flash('Invalid Actions')
         return redirect(url_for('admin_staff'))

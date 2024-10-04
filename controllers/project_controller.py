@@ -14,11 +14,17 @@ def add_project_function():
         
         if not project_name or not project_department:
             flash('Empty Fields')
-            return redirect(url_for('admin_open_project'))
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
         
         if projects.find_one({ "project_name" : project_name, "project_department" : project_department }):
             flash('Project already Exist')
-            return redirect(url_for('admin_open_project'))
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
         else:
             projects.insert_one({
                 "project_name" : project_name, 
@@ -29,8 +35,12 @@ def add_project_function():
                 "project_status" : "Open"
             })
             flash('Project Created for ' + project_department)
-            return redirect(url_for('admin_open_project'))
-    
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
+            
+
 def update_project_function(id):
     
     if request.method == "POST":
@@ -41,8 +51,10 @@ def update_project_function(id):
 
         if not project_name or not project_department or not project_status:
             flash('Empty Fields')
-            return redirect(url_for('admin_open_project'))
-        
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
         else:
             projects.update_one(
                 {"_id": ObjectId(id)}, 
@@ -52,8 +64,10 @@ def update_project_function(id):
                     "project_status" : project_status
                 }})
             flash('Project Updated')
-            return redirect(url_for("admin_open_project"))
-        
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
 
 def trash_project_function(id):
     
@@ -64,8 +78,10 @@ def trash_project_function(id):
                 "project_status" : "Trash"
             }})
         flash('Project Moved to Trash')
-        return redirect(url_for('admin_open_project'))
-    
+        if session['role'] == "Admin":
+            return redirect(url_for('admin_open_project'))
+        elif session['role'] == "Manager":
+            return redirect(url_for('man_open_proj'))
 
 def add_task_function(id):
 
@@ -78,9 +94,14 @@ def add_task_function(id):
         due_date = request.form['due_date']
         task_status = request.form['task_status']
         
-        if not task_name:
-            flash('Task Name Needed')
-            return redirect(url_for('admin_open_project'))
+        if not task_name or not assign_to:
+            flash('Task Name and Asignee Needed')
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
+            elif session['role'] == "Staff":
+                return redirect(url_for('staff_open_proj'))
         else:
             tasks.insert_one({
                 "task_name" : task_name,
@@ -93,8 +114,12 @@ def add_task_function(id):
                 "assigned_to" : assign_to 
             })
             flash('Task Added')
-            return redirect(url_for('admin_open_project'))
-
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
+            elif session['role'] == "Staff":
+                return redirect(url_for('staff_open_proj'))
 
 def edit_task_function(id):
 
@@ -109,7 +134,10 @@ def edit_task_function(id):
 
         if not task_name:
             flash('Task Name Needed')
-            return redirect(url_for('admin_open_project'))
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
         else:
             tasks.update_one(
                 {"_id" : ObjectId(id)}, 
@@ -122,15 +150,20 @@ def edit_task_function(id):
                     "assigned_to" : assign_to 
                 }})
             flash("Task Updated")
-            return redirect(url_for('admin_open_project'))
+            if session['role'] == "Admin":
+                return redirect(url_for('admin_open_project'))
+            elif session['role'] == "Manager":
+                return redirect(url_for('man_open_proj'))
         
 
 def delete_task_function(id):
     if request.method == "POST":
         tasks.delete_one({ "_id" : ObjectId(id) })
         flash("Task Deleted")
-        return redirect(url_for('admin_open_project'))
-    
+        if session['role'] == "Admin":
+            return redirect(url_for('admin_open_project'))
+        elif session['role'] == "Manager":
+            return redirect(url_for('man_open_proj'))
 
 def recover_open_function(id):
     if request.method == "POST":
@@ -140,8 +173,11 @@ def recover_open_function(id):
                 "project_status" : "Open"
             }})
         flash("Project Recovered")
-        return redirect(url_for('admin_trash_project'))
-    
+        if session['role'] == "Admin":
+            return redirect(url_for('admin_open_project'))
+        elif session['role'] == "Manager":
+            return redirect(url_for('man_open_proj'))
+        
 def recover_finish_function(id):
     if request.method == "POST":
         projects.update_one(
@@ -150,11 +186,17 @@ def recover_finish_function(id):
                 "project_status" : "Finish"
             }})
         flash("Project Recovered")
-        return redirect(url_for('admin_trash_project'))
+        if session['role'] == "Admin":
+            return redirect(url_for('admin_open_project'))
+        elif session['role'] == "Manager":
+            return redirect(url_for('man_open_proj'))
     
 def delete_project_funcion(id):
     if request.method == "POST":
         projects.delete_one({ "_id" : ObjectId(id) })
         flash('Project Deleted')
         tasks.delete_many({"project_id" : ObjectId(id)})
-        return redirect(url_for('admin_trash_project'))
+        if session['role'] == "Admin":
+            return redirect(url_for('admin_open_project'))
+        elif session['role'] == "Manager":
+            return redirect(url_for('man_open_proj'))
