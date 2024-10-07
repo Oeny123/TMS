@@ -75,6 +75,24 @@ function settings_modal() {
     console.log(element)
     element.classList.toggle("modal-show");
 }
+function global_notif_modal() {
+    const element = document.getElementById("global-notif");
+    console.log(element)
+    element.classList.toggle("modal-show");
+}
+function man_notif_modal() {
+    const element = document.getElementById("man-notif");
+    console.log(element)
+    element.classList.toggle("modal-show");
+}
+
+
+
+
+function hide_modal(obs) {
+
+    obs.classList.toggle("hide");
+}
 // document.getElementById("imageid").src="../template/save.png";
 $(document).ready(function() {
     // Initialize Select2 for the static multi-select dropdown

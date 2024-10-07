@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+
+
+<!-- Head -->
+{% block head %}
+    <title>Notification</title>
+{% endblock %}
+
+
+<!-- Top -->
+{% block top %}
+    <div>
+        <p id="subp">Notification</p>
+        {% for image in images %}
+            {% if userid|string == image.user_id|string %}
+                <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
+            {% endif %}
+        {% else %}
+            <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" onclick="pfp_modal() ">
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+<!-- Panel -->
+{% block panel %}
+    <div class="user-details">
+        <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" class="profile">
+        <br>
+        <p class="name"> {{ name }}</p>
+        <p class="departement">Admin</p>
+        <br>
+        <br>
+    </div>
+    <div class="links">
+        <a href="{{ url_for('admin') }}">
+            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="">
+            <p>Dashboard</p>
+        </a>
+        <br>
+        <a  href="{{url_for('admin_staff')}}">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt="">
+            <p>Staff</p>
+        </a>
+        <br>
+        <a onclick="project_nav()">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
+            <p>Projects </p>
+        </a>
+        <ul id="projects">
+            <li>
+                <a href="{{url_for('admin_open_project')}}">
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
+                    <p>Open</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_finish_project') }}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                    <p>Finished</p>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                    <p>Trashed</p>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <a class="active">
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+            <p>Notification</p>
+        </a>
+    </div>
+{% endblock %}
+
+
+<!-- nav2 -->
+{% block nav2 %}
+    <div class="icon-link">
+        <br>
+        <a>
+            <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
+        </a>
+        <br>
+        <br>
+        <a href="{{url_for('admin')}}">
+            <img src="{{ url_for('static', filename='icons/dashboard.svg') }}" alt="">
+        </a>
+        <br>
+        <a href="{{ url_for('admin_staff'  ) }}">
+            <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt=""  >
+        </a>
+        <br>
+        <a onclick="project_nav()">
+            <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
+        </a>
+        <ul id="project-icon">
+            <li>
+                <a href="{{url_for('admin_open_project')}}">
+                    <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_finish_project') }}">
+                    <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
+                </a>
+            </li>
+            <li>
+                <a >
+                    <img src="{{ url_for('static', filename='icons/trashed-project.png') }}" alt="">
+                </a>
+            </li>
+        </ul>
+        <a>
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="" class="active-icon">
+        </a>
+    </div>
+{% endblock %}
+
+
+<!-- Main -->
+{% block main %}
+    <div class=project-main>
+        <div class="filter">
+            <button onclick="hide_modal(globs)">GLobal</button>
+            <button onclick="hide_modal(mans)">Manager</button>
+            <button onclick="hide_modal(staps)">Staff</button>
+        </div>
+        <br>
+        <div id="globs">
+            <div class="project-head">
+                <h1 class="w-h1">Global</h1>    
+                <button onclick="global_notif_modal()">compose</button>
+            </div>
+            <br>
+            {% for g_notif in g_notifs | reverse %}
+            <details>
+                <summary>
+                    <div class="proj-details notif-head ">
+                        <div>
+                            {% if g_notif.title != "" %}
+                                {{ g_notif.title }}
+                            {% else %}
+                                <p>No Title</p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {{ g_notif.date  }}
+                        </div>
+                    </div>
+                </summary>
+                <div class="table-container" >
+                    <p>
+                        {{name}},
+                        <br>
+                        <br>
+                        <mes-sage>
+                            {{ g_notif.message }}
+                        </mes-sage>
+                        <br>
+                        <br>
+                        __
+                        <br>
+                        <b>{{g_notif.sender}}</b>
+                    </p>
+                    <br>
+                    <form action="" method="POST">
+                        <button>Delete</button>
+                    </form>
+                </div>
+            </details>
+            <br>
+            {% endfor %}
+        </div>
+        <div id="mans">
+            <div class="project-head">
+                <h1 class="w-h1">For Managers</h1>
+                <button onclick="man_notif_modal()">Compose</button>
+            </div>
+            <br>
+            {% for man in man_notifs | reverse %}
+                <details>
+                    <summary>
+                        <div class="proj-details notif-head">
+                            <div>
+                                {{man.title}} - <b>{{ man.sender }}</b>
+                            </div>
+                            <div>
+                                {{man.date}}
+                            </div>
+                        </div>
+                    </summary>
+                    <div class="table-container" >
+                        <p>
+                            {{man.reciever}},
+                            <br>
+                            <br>
+                            <mes-sage>
+                                {{man.message}}
+                            </mes-sage>
+                            <br>
+                            <br>
+                        </p>
+                        <form action="" method="POST">
+                            <button>Delete</button>
+                        </form>
+                    </div>
+                </details>
+                <br>
+            {% endfor %}
+        </div>
+        <div id="staps">
+            <div class="project-head">
+                <h1 class="w-h1">For Staff</h1>
+                <button>Compose</button>
+            </div>
+            <br>
+            <details>
+                <summary>
+                    <div class="proj-details">
+                        Title - <b>Sender</b>
+                    </div>
+                </summary>
+                <div class="table-container" >
+                    <p>
+                        Reciever,
+                        <br>
+                        <br>
+                        <mes-sage>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus est doloribus enim autem harum suscipit. Nisi, numquam eaque aspernatur iure dolorem impedit debitis laboriosam, consequatur sapiente delectus, repellendus odio repellat?
+                        </mes-sage>
+                        <br>
+                        <br>
+                    </p>
+                    <br>
+                    <form action="" method="POSt">
+                        <button>Delete</button>
+                    </form>
+                </div>
+            </details>
+            <br>
+        </div>
+    </div>
+{% endblock %}
+
+
+<!-- Body -->
+{% block body %}
+    <div class="prof-modal" id="user-modal">
+        <div class="pfp-modal"> 
+            <div class="user-content">
+                <div class="user-modal user">
+                    {% for image in images %}
+                        {% if userid|string == image.user_id|string %}
+                            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp">
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <p class="name"> {{ name }}</p>
+                    <p class="departement">Admin</p>
+                    <br>
+                    <br>
+                </div>
+                <a onclick="settings_modal()">
+                    <img src="{{ url_for('static', filename='icons/settings.svg') }}" alt="">
+                    <p>Settings</p>
+                </a>
+                <a href=" {{ url_for('logout') }} ">
+                    <img src="{{ url_for('static', filename='icons/logout.svg') }}" alt="">
+                    <p>Logout</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="settings">
+        <div class="modal">
+            <div class="modal-content setting-modal">
+                <div class="update-modal-container ">
+                    <div>
+                        <form action=" {{url_for('admin_setting_account', id = userid )}} " method="POST" enctype="multipart/form-data">
+                            <label for="">Profile Picture</label>
+                            <br>
+                            {% for image in images %}
+                                {% if userid|string == image.user_id|string %}
+                                    <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="edit-pfp">
+                                {% endif %}
+                            {% endfor %}
+                            <br>
+                            <br>
+                            <input type="file" name="image" id="">
+                            <br>
+                            <br>
+                            <div class="up-pfp">
+                                <button type="submit">Upload Profile</button>
+                            </div>
+                        </form>
+                        <br>
+                        <form action=" {{ url_for('admin_remove_image', id=userid) }} " method="POST">
+                            <div class="rem-pfp">
+                                <button type="submit">Remove Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        <form action=" {{ url_for('account_setting_update', id = userid) }} " method="POST" enctype="multipart/form-data">
+                            <label for="">Name<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <input type="text" name="name" id="" class="staff-input" value="">
+                            <br>
+                            <br>
+                            <div class="staff-input-flex">
+                                <div>
+                                    <label for="">Username<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="username" id="" class="staff-input" value="">
+                                </div>
+                                <div>
+                                    <label for="">Password<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="password" id="" class="staff-input" value="">
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="regi-butt">
+                                <button type="submit">Update</button>
+                                <button type="button" onclick=" settings_modal()">close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="global-notif">
+        <div class="modal">
+            <div class="modal-content">
+                <div class="update-modal-container ">
+                    <form action="{{ url_for('global_notif') }}" method="POST">
+
+                        <p>Recieve: All,</p>
+                        <br>
+                        <p>Title</p>
+                        <input type="text" name="title" id="" placeholder="Title...">
+                        <br>
+                        <textarea name="message" id="" placeholder="Message...">
+
+                        </textarea>
+                        <br>
+                        <br>
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+                <br>
+                <br>
+                <button onclick="global_notif_modal()">Close</button>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="man-notif">
+        <div class="modal">
+            <div class="modal-content">
+                <div class="update-modal-container ">
+                    <form action="{{url_for('man_notif')}}" method="POST">
+                        <p>Recieve: All,</p>
+                        <br>
+                        <p>Title</p>
+                        <input type="text" name="title" id="" placeholder="Title...">
+                        <br>
+                        <textarea name="message" id="" placeholder="Message..."></textarea>
+                        <br>
+                        <br>
+                        <label for="">To:</label>
+                        <br>
+                        <select name="receiver" id="">
+                            <option value="All">All</option>
+                            {% for user in users if user.role == "Manager" %}
+                            <option value="{{user.username}}">{{user.username}}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+                <br>
+                <br>
+                <button onclick="man_notif_modal()">Close</button>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

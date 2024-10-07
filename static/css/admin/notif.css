@@ -1,0 +1,19 @@
+mes-sage {
+   margin: 30px;
+}
+.notif-head {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+}
+.filter {
+   position: sticky;
+   top: 0;
+   background-color: #1f2c35d7;
+   padding: 10px;
+   border-radius: 10px;
+
+}
+.hide {
+   display: none;
+}

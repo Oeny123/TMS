@@ -34,3 +34,17 @@ def image_db():
     images = images_db["images"]
 
     return images
+
+def global_notif_db():
+    client = MongoClient("mongodb+srv://kapengbarako:latte@test-cluster.qsvaj.mongodb.net/?retryWrites=true&w=majority&appName=Test-Cluster")
+    notif_db = client['notif_db']
+    global_notifs = notif_db['global_notifs']
+
+    return global_notifs
+
+def man_notif_db():
+    client = MongoClient("mongodb+srv://kapengbarako:latte@test-cluster.qsvaj.mongodb.net/?retryWrites=true&w=majority&appName=Test-Cluster")
+    notif_db = client['notif_db']
+    man_notifs = notif_db['man_notifs']
+
+    return man_notifs

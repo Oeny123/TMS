@@ -286,6 +286,10 @@ main {
     align-items: center;
 }
 
+details , summary {
+    color: white;
+}
+
 @keyframes flash {
     0% {
         top: -10%;
