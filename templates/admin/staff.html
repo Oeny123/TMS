@@ -7,10 +7,10 @@
 {% block top %} 
     <div>
         <p id="subp">Staff</p>
-        {% for image in images %}
-            {% if userid|string == image.user_id|string %}
-                <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
-            {% endif %}
+        {% for image in images if userid|string == image.user_id|string %}
+       
+        <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
+     
         {% else %}
             <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" onclick="pfp_modal() ">
         {% endfor %}

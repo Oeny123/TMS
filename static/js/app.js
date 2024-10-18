@@ -15,13 +15,7 @@ function nav_control() {
     top_p.classList.toggle("opacity-1")
     
 }
-function project_nav() {
-    var element = document.getElementById("projects");
-    element.classList.toggle("show");
-    var element = document.getElementById("project-icon");
-    element.classList.toggle("show");
 
-}
 
 function dept_modal(dept) {
     var element = document.getElementById(dept);
@@ -75,24 +69,20 @@ function settings_modal() {
     console.log(element)
     element.classList.toggle("modal-show");
 }
-function global_notif_modal() {
-    const element = document.getElementById("global-notif");
-    console.log(element)
-    element.classList.toggle("modal-show");
-}
-function man_notif_modal() {
-    const element = document.getElementById("man-notif");
-    console.log(element)
-    element.classList.toggle("modal-show");
+
+function project_nav(nav_id) {
+    nav_id.classList.toggle("show");
 }
 
-
-
-
-function hide_modal(obs) {
-
-    obs.classList.toggle("hide");
+function show_modal(tag_id) {
+    tag_id.classList.toggle("modal-show");
 }
+
+function hide_modal(tag_id) {
+    tag_id.classList.toggle("hide");
+}
+
+
 // document.getElementById("imageid").src="../template/save.png";
 $(document).ready(function() {
     // Initialize Select2 for the static multi-select dropdown

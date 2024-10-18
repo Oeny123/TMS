@@ -93,12 +93,12 @@
             <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt=""  >
         </a>
         <br>
-        <a onclick="project_nav()">
+        <a onclick="project_nav(project_icons)">
             <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj active-icon" alt="" id="folder">
         </a>
-        <ul id="project-icon">
+        <ul id="project_icons">
             <li>
-                <a>
+                <a href="{{ url_for('admin_open_project') }}">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="" class="active-icon">
                 </a>
             </li>
@@ -113,9 +113,26 @@
                 </a>
             </li>
         </ul>
-        <a>
+        <a onclick="project_nav(notif_icons)">
             <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
         </a>
+        <ul id="notif_icons">
+            <li>
+                <a href="{{ url_for('inbox_notification') }}">
+                    <img src=" {{ url_for('static', filename='icons/inbox.svg') }} " alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('sent_notification')}}">
+                    <img src="{{url_for('static', filename='icons/sent.svg')}}" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('trash_notification')}}">
+                    <img src="{{ url_for('static', filename='icons/trash.svg') }}" alt="">
+                </a>
+            </li>
+        </ul>
     </div>
 {% endblock %}
 

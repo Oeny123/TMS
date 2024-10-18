@@ -33,19 +33,19 @@
             <p>Staff</p>
         </a>
         <br>
-        <a onclick="project_nav()">
+        <a onclick="project_nav(projects)">
             <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
             <p>Projects </p>
         </a>
         <ul id="projects">
             <li>
-                <a href=" {{ url_for('man_open_proj') }} ">
+                <a href="{{ url_for('man_open_proj') }}">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
                     <p>Open</p>
                 </a>
             </li>
             <li>
-                <a  href="{{url_for('man_finish_proj')}}">
+                <a href="{{url_for('man_finish_proj')}}">
                     <img src="{{url_for('static', filename='icons/finished-project.png')}}" alt="">
                     <p>Finished</p>
                 </a>
@@ -58,10 +58,30 @@
             </li>
         </ul>
         <br>
-        <a>
+        <a onclick="project_nav(notif)">
             <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
             <p>Notification</p>
         </a>
+        <ul id="notif">
+            <li>
+                <a href="{{ url_for('inbox_notification') }}">
+                    <img src=" {{ url_for('static', filename='icons/inbox.svg') }} " alt="">
+                    <p>Inbox</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_finish_project')}}">
+                    <img src="{{url_for('static', filename='icons/sent.svg')}}" alt="">
+                    <p>Sent</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('admin_trash_project')}}">
+                    <img src="{{ url_for('static', filename='icons/trash.svg') }}" alt="">
+                    <p>Trash</p>
+                </a>
+            </li>
+        </ul>
     </div>
 {% endblock %}
 <!-- nav 2 -->
@@ -69,19 +89,19 @@
     <div class="icon-link">
         <br>
         <a>
-            <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
+            <img src="{{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
         </a>
         <br>
         <a href="{{ url_for('manager'  ) }}">
             <img src="{{ url_for('static', filename='icons/staff.svg') }}" alt=""  class="active-icon">
         </a>
         <br>
-        <a onclick="project_nav()">
+        <a onclick="project_nav(project_icons)">
             <img src="{{ url_for('static', filename='icons/folder.svg') }}" class="proj" alt="" id="folder">
         </a>
-        <ul id="project-icon">
+        <ul id="project_icons">
             <li>
-                <a  href="{{ url_for('man_open_proj' ) }}">
+                <a href="{{ url_for('man_open_proj') }}">
                     <img src=" {{ url_for('static', filename='icons/project.png') }} " alt="">
                 </a>
             </li>
@@ -96,9 +116,26 @@
                 </a>
             </li>
         </ul>
-        <a>
+        <a onclick="project_nav(notif_icons)">
             <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
         </a>
+        <ul id="notif_icons">
+            <li>
+                <a href="{{ url_for('inbox_notification') }}">
+                    <img src=" {{ url_for('static', filename='icons/inbox.svg') }} " alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('sent_notification')}}">
+                    <img src="{{url_for('static', filename='icons/sent.svg')}}" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('trash_notification')}}">
+                    <img src="{{ url_for('static', filename='icons/trash.svg') }}" alt="">
+                </a>
+            </li>
+        </ul>
     </div>
 {% endblock %}
 <!-- Main -->

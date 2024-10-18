@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/john/Desktop/Capstone/Projects/Task Management System/env/bin/python3" "$0" "$@"
-' '''
+#!/home/john/Documents/GitHub/TMS/env/bin/python3.11
 # -*- coding: utf-8 -*-
 import re
 import sys

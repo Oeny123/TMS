@@ -1,7 +1,9 @@
 from flask import render_template, request, flash, redirect, url_for, session
 from controllers.models import users_db, dept_db, project_db, task_db, image_db
 from bson.objectid import ObjectId
+from flask_bcrypt import Bcrypt
 
+bcrypt = Bcrypt()
 
 users = users_db()
 depts = dept_db()
@@ -20,9 +22,10 @@ def login_function():
             flash("Empty Fields")
             return redirect(url_for('login'))
         
-        user = users.find_one({ "username" : username, "password" : password })
+        user = users.find_one({ "username" : username})
+
         
-        if user:
+        if user and bcrypt.check_password_hash(user['password'], password):
 
             session['name'] = user['name']
             session['username'] = user['username']
@@ -40,7 +43,7 @@ def login_function():
                 return redirect(url_for('manager'))
             elif user['role'] == "Staff":
                 flash('Staff Login')
-                return redirect(url_for('staff'))
+                return redirect(url_for('inbox_notification'))
             
         else:
             flash("Invalid Username or Password")

@@ -1,17 +1,19 @@
 from flask import Flask
 from controllers.user_controller import login_function, logout_function, admin_function, manager_function, staff_function 
 from controllers.acount_crud import edit_account_function, delete_user_account, account_image_function, remove_image_function, account_setting_update_info_function, admin_setting_image_function, admin_remove_image_function
-from controllers.admin import admin_staff_function, admin_open_projects_funtion, admin_finish_projects_function, admin_trash_projects_function, admin_add_user_function, admin_notification_fnction
+from controllers.admin import admin_staff_function, admin_open_projects_funtion, admin_finish_projects_function, admin_trash_projects_function, admin_add_user_function
 from controllers.project_controller import add_project_function, update_project_function, trash_project_function, add_task_function, edit_task_function, delete_task_function, recover_open_function, recover_finish_function, delete_project_funcion
 from controllers.dept_crud import create_dept_function, delete_dept_function
 from controllers.manger import man_edit_account_function, man_delete_user_account, man_account_image_function, man_remove_image_function, man_open_proj_funtion, man_finish_proj_funtion, man_trash_proj_funtion
 import secrets
 from controllers.staff import staff_open_project_function
-from controllers.notification import global_notif_function, man_notif_funtion
-    
+from controllers.notification import inbox_function, sent_function, trash_function, compose_notification_funtion
+from flask_bcrypt import Bcrypt
+
+
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
-
+bcrypt = Bcrypt(app)
 
 # login
 @app.route('/', methods=['GET','POST'])
@@ -57,10 +59,6 @@ def admin_finish_project():
 @app.route('/admin-trash-project', methods=['GET','POST'])
 def admin_trash_project():
     return admin_trash_projects_function()
-
-@app.route('/admin-notification')
-def admin_notification():
-    return admin_notification_fnction()
 
 # Manager Pages / Routes ============================================================================
 
@@ -175,13 +173,21 @@ def delete_dept(id, dept):
     return delete_dept_function(id, dept)
 
 # Notification ========================================================
-@app.route('/global-notif', methods=['GET','POST'])
-def global_notif():
-    return global_notif_function()
+@app.route('/inbox_notification', methods=['GET','POST'])
+def inbox_notification():
+    return inbox_function()
 
-@app.route('/man-notif', methods=['POST','GET'])
-def man_notif():
-    return man_notif_funtion()
+@app.route('/sent_notification', methods=['GET','POST'])
+def sent_notification():
+    return sent_function()
+
+@app.route('/trash_notification', methods=['GET','POST'])
+def trash_notification():
+    return trash_function()
+
+@app.route('/notif-compose', methods=['GET','POST'])
+def notif():
+    return compose_notification_funtion()
 
 if __name__ == "__main__":
     app.run(debug=True)

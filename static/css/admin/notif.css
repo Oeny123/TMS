@@ -12,8 +12,15 @@ mes-sage {
    background-color: #1f2c35d7;
    padding: 10px;
    border-radius: 10px;
-
 }
 .hide {
    display: none;
+}
+.h-s {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+.h-s div {
+   width: 20px;
 }

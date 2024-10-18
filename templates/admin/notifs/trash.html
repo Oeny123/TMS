@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+<!-- Head -->
+{% block head %}
+    <title>Trash</title>
+{% endblock %}
+
+
+<!-- Top -->
+{% block top %}
+    <div>
+        <p id="subp">Trash Notification</p>
+        {% for image in images if userid|string == image.user_id|string  %}
+            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp" onclick="pfp_modal(   )">
+        {% else %}
+            <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" onclick="pfp_modal() ">
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+<!-- Panel -->
+{% block panel %}
+
+    <div class="user-details">
+        <img src=" {{ url_for('static', filename='icons/profile.svg') }} " alt="" class="profile">
+        <br>
+        <p class="name"> {{ name }}</p>
+        <p class="departement">{{ role }} </p>
+        <br>
+        <br>
+    </div>
+    <div class="links">
+
+        {% if role == "Admin" %}
+        <a href="{{ url_for('admin')}}">
+            <img src="{{ url_for('static', filename='icons/back_arrow.svg') }}" alt="">
+            <p>Go Back</p>
+        </a>
+        {% elif role == "Manager" %}
+        <a href="{{ url_for('manager')}}">
+            <img src="{{ url_for('static', filename='icons/back_arrow.svg') }}" alt="">
+            <p>Go Back</p>
+        </a>
+        {% elif role == "Staff" %}
+        <a href="{{ url_for('staff')}}">
+            <img src="{{ url_for('static', filename='icons/back_arrow.svg') }}" alt="">
+            <p>Go Back</p>
+        </a>
+        {% endif %}
+        <br>
+        <a onclick="project_nav(notif)" class="active">
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="">
+            <p>Notification</p>
+        </a>
+        <ul id="notif">
+            <li>
+                <a href="{{ url_for('inbox_notification') }}">
+                    <img src=" {{ url_for('static', filename='icons/inbox.svg') }} " alt="">
+                    <p>Inbox</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('sent_notification')}}">
+                    <img src="{{url_for('static', filename='icons/sent.svg')}}" alt="">
+                    <p>Sent</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('trash_notification')}}" class="active">
+                    <img src="{{ url_for('static', filename='icons/trash.svg') }}" alt="">
+                    <p>Trash</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+
+<!-- nav2 -->
+{% block nav2 %}
+    <div class="icon-link">
+        <br>
+        <a>
+            <img src=" {{ url_for('static', filename='icons/menu_open.svg') }}" alt="" class="nav-button" onclick="nav_control()" id="open">
+        </a>
+        <br>
+        <br>
+        {% if role == "Admin" %}
+        <a href="{{ url_for('admin')}}">
+            <img src="{{ url_for('static', filename='icons/back_arrow.svg') }}" alt="">
+        </a>
+        {% elif role == "Manager" %}
+        <a href="{{ url_for('manager')}}">
+            <img src="{{ url_for('static', filename='icons/back_arrow.svg') }}" alt="">
+        </a>
+        {% elif role == "Staff" %}
+        <a href="{{ url_for('staff')}}">
+            <img src="{{ url_for('static', filename='icons/back_arrow.svg') }}" alt="">
+        </a>
+        {% endif %}
+        <br>
+        <a onclick="project_nav(notif_icons)">
+            <img src="{{ url_for('static', filename='icons/notification.svg') }}" alt="" class="active-icon">
+        </a>
+        <ul id="notif_icons">
+            <li>
+                <a href="{{ url_for('inbox_notification') }}">
+                    <img src=" {{ url_for('static', filename='icons/inbox.svg') }} " alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('sent_notification')}}">
+                    <img src="{{url_for('static', filename='icons/sent.svg')}}" alt="">
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('trash_notification')}}">
+                    <img src="{{ url_for('static', filename='icons/trash.svg') }}" alt="" class="active-icon">
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+
+<!-- Main -->
+{% block main %}
+    <div class=project-main>
+        <br>
+        <div class="project-head">
+            <div class="h-s">
+                <h1 class="w-h1">Notification</h1>
+                <div></div>
+                <form method="POST" action="" class="search">
+                    <input type="text" name="search" placeholder="Search..." value="{{ request.form.get('search', '') }}" class="s_input">
+                    <button type="submit" class="s_button">Search</button>
+                </form>
+            </div>
+        </div>
+        <br>
+        {% for notif in notifs | reverse if notif.status == "Trash" and notif.sender_id | string  == userid %}
+            {% if notif.role == "Admin" %}
+                <details id="globs">
+                    <summary>
+                        <div class="proj-details notif-head">
+                            <div>
+                                {{notif.title}} - <b>{{notif.sender}}</b>
+                            </div>
+                            <div>
+                                {{notif.date}}
+                            </div>
+                        </div>
+                    </summary>
+                    <div class="table-container" >
+                        <p>
+                            {{notif.department}}-{{notif.role}} {{notif.name}} <br> {{notif.reciever}},
+                            <br>
+                            <br>
+                            <mes-sage>
+                                {{notif.message}}
+                            </mes-sage>
+                            <br>
+                            <br>
+                        </p>
+                        <form action="" method="POST">
+                            <button>Delete</button>
+                        </form>
+                    </div>
+                </details>
+                <br>
+            {% elif notif.role == "Manager" %}
+                <details id="mans">
+                    <summary>
+                        <div class="proj-details notif-head">
+                            <div>
+                                {{notif.title}} - <b>{{notif.sender}}</b>
+                            </div>
+                            <div>
+                                {{notif.date}}
+                            </div>
+                        </div>
+                    </summary>
+                    <div class="table-container" >
+                        <p>
+                            {{notif.department}}-{{notif.role}} {{notif.name}} <br> {{notif.reciever}},
+                            <br>
+                            <br>
+                            <mes-sage>
+                                {{notif.message}}
+                            </mes-sage>
+                            <br>
+                            <br>
+                        </p>
+                        <form action="" method="POST">
+                            <button>Delete</button>
+                        </form>
+                    </div>
+                </details>
+                <br>
+            {% elif notif.role == "Staff" %}
+                <details id="staps">
+                    <summary>
+                        <div class="proj-details notif-head">
+                            <div>
+                                {{notif.title}} - <b>{{notif.sender}}</b>
+                            </div>
+                            <div>
+                                {{notif.date}}
+                            </div>
+                        </div>
+                    </summary>
+                    <div class="table-container" >
+                        <p>
+                            {{notif.department}}-{{notif.role}} {{notif.name}} <br> {{notif.reciever}},
+                            <br>
+                            <br>
+                            <mes-sage>
+                                {{notif.message}}
+                            </mes-sage>
+                            <br>
+                            <br>
+                        </p>
+                        <form action="" method="POST">
+                            <button>Delete</button>
+                        </form>
+                    </div>
+                </details>
+                <br>
+                {% else %}
+                    <details>
+                        <summary>
+                            <div class="proj-details notif-head">
+                                <div>
+                                    {{notif.title}} - <b>{{notif.sender}}</b>
+                                </div>
+                                <div>
+                                    {{notif.date}}
+                                </div>
+                            </div>
+                        </summary>
+                        <div class="table-container" >
+                            <p>
+                                {{notif.department}}-{{notif.role}} {{notif.name}} <br> {{notif.reciever}},
+                                <br>
+                                <br>
+                                <mes-sage>
+                                    {{notif.message}}
+                                </mes-sage>
+                                <br>
+                                <br>
+                            </p>
+                            <form action="" method="POST">
+                                <button>Delete</button>
+                            </form>
+                        </div>
+                    </details>
+                    <br>
+            {% endif %}
+        {% endfor %}
+
+        
+    </div>
+{% endblock %}
+
+
+<!-- Body -->
+{% block body %}
+    <div class="prof-modal" id="user-modal">
+        <div class="pfp-modal"> 
+            <div class="user-content">
+                <div class="user-modal user">
+                    {% for image in images %}
+                        {% if userid|string == image.user_id|string %}
+                            <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="pfp">
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <p class="name"> {{ name }}</p>
+                    <p class="departement">{{ role }}</p>
+                    <br>
+                    <br>
+                </div>
+                <a onclick="settings_modal()">
+                    <img src="{{ url_for('static', filename='icons/settings.svg') }}" alt="">
+                    <p>Settings</p>
+                </a>
+                <a href=" {{ url_for('logout') }} ">
+                    <img src="{{ url_for('static', filename='icons/logout.svg') }}" alt="">
+                    <p>Logout</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="settings">
+        <div class="modal">
+            <div class="modal-content setting-modal">
+                <div class="update-modal-container ">
+                    <div>
+                        <form action=" {{url_for('admin_setting_account', id = userid )}} " method="POST" enctype="multipart/form-data">
+                            <label for="">Profile Picture</label>
+                            <br>
+                            {% for image in images %}
+                                {% if userid|string == image.user_id|string %}
+                                    <img src="data:image/png;base64,{{ image.image }}" alt="Image" class="edit-pfp">
+                                {% endif %}
+                            {% endfor %}
+                            <br>
+                            <br>
+                            <input type="file" name="image" id="">
+                            <br>
+                            <br>
+                            <div class="up-pfp">
+                                <button type="submit">Upload Profile</button>
+                            </div>
+                        </form>
+                        <br>
+                        <form action=" {{ url_for('admin_remove_image', id=userid) }} " method="POST">
+                            <div class="rem-pfp">
+                                <button type="submit">Remove Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        <form action=" {{ url_for('account_setting_update', id = userid) }} " method="POST" enctype="multipart/form-data">
+                            <label for="">Name<aste-ricks>*</aste-ricks></label>
+                            <br>
+                            <input type="text" name="name" id="" class="staff-input" value="">
+                            <br>
+                            <br>
+                            <div class="staff-input-flex">
+                                <div>
+                                    <label for="">Username<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="username" id="" class="staff-input" value="">
+                                </div>
+                                <div>
+                                    <label for="">Password<aste-ricks>*</aste-ricks></label>
+                                    <br>
+                                    <input type="text" name="password" id="" class="staff-input" value="">
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="regi-butt">
+                                <button type="submit">Update</button>
+                                <button type="button" onclick=" settings_modal()">close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

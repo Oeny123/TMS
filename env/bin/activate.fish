@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/john/Desktop/Capstone/Projects/Task Management System/env"
+set -gx VIRTUAL_ENV "/home/john/Documents/GitHub/TMS/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
